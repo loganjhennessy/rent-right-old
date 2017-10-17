@@ -1,14 +1,13 @@
-'''rentscraper.search_for_listings
+'''rentscraper.scraper
 '''
 import sys
 
-from rentscraper.lib import zipcoderequest
-from rentscraper.lib import zipcodesearch
-from rentscraper.lib import listingscraper
+from rentscraper import zipcoderequest
+from rentscraper import zipcodesearch
+from rentscraper import listingscraper
+from renscraper.log import get_configured_logger
 
 def main(argv):
-    '''
-    '''
     if len(argv) < 3:
         raise ValueError('Must provide city and state')
 
@@ -17,13 +16,13 @@ def main(argv):
     request = zipcoderequest.ZipCodeRequest(city, state)
     zipcodes = request.execute()
     for zipcode in zipcodes:
-        search = zipcodesearch.ZipCodeSearch(zipcode)
-        search.search()
+        search = zipcodesearch.ZipCodeSearch(city, zipcode)
+        search.execute()
         logger.info('Compiled results for zip code {}'.format(zipcode)
 
         scraper = listingscraper.ListingScraper(zipcode)
-        scraper.scrape()
+        scraper.execute()
         logger.info('Gathered listings for zip code {}'.format(zipcode)
-        
+
 if __name__ == '__main__':
     main(sys.argv)
