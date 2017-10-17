@@ -24,3 +24,11 @@ flexible enough to accommodate such changes with minimal re-factoring.
 # Use
 
 > Coming soon
+
+# References
+
+- [The Ultimate Guide to Scrapig Craigslist Data with Software](
+http://ghostproxies.com/blog/2015/09/the-ultimate-guide-to-scraping-craigslist-data-with-software/)
+- [Scraping Apartment Listings from Craigslist](
+https://cewing.github.io/training.codefellows/assignments/day11/scraper.html)
+
