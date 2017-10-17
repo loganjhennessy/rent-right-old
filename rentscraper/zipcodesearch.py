@@ -2,14 +2,12 @@
 '''
 import datetime
 import os
-import random
 import requests
 import time
 
 from bs4 import BeautifulSoup
 from fake_useragent import UserAgent
 from log import get_configured_logger
-from pymongo import MongoClient
 
 class ZipCodeSearch(object):
     '''Implements a search for all rental listings by zip code.
@@ -24,10 +22,11 @@ class ZipCodeSearch(object):
 
     '''
 
-    def __init__(self, city, zipcode):
-        self.base = 'https://{}.craigslist.org/search/apa'
+    def __init__(self, city, zipcode, mongoclient):
+        self.base = os.environ['BASE_URL']
         self.city = city.lower()
         self.logger = get_configured_logger('DEBUG', __name__)
+        self.mongoclient = mongoclient
         self.proxy = os.environ['HTTP_PROXY']
         self.ua = UserAgent()
         self.zipcode = zipcode
@@ -39,6 +38,7 @@ class ZipCodeSearch(object):
         )
 
     def execute(self):
+    '''Executes a zip code search for rental properties'''
         results = []
         content = self._search()
         results.append(content)
@@ -51,6 +51,7 @@ class ZipCodeSearch(object):
         self._writelistingstomongo(listings)
 
         for s in range(120, int(count), 120):
+            time.sleep(1)
             content = self._search(str(s))
             listings = self._parseresults(content, str(s))
             self._writelistingstomongo(listings)
@@ -97,7 +98,7 @@ class ZipCodeSearch(object):
         retries = 0
         while resp.status_code != 200 and retries < 5:
             self.logger.info('Invalid response, retrying...')
-            time.sleep(10)
+            time.sleep(4)
             resp = requests.get(
                 url,
                 headers=headers,
@@ -118,8 +119,7 @@ class ZipCodeSearch(object):
         return resp.content
 
     def _writelistingstomongo(self, listings):
-        mongoclient = MongoClient('localhost', 27017)
-        scraper_db = mongoclient.scraper
+        scraper_db = self.mongoclient.scraper
         listing_collection = scraper_db.listing
         for listing in listings:
             listing_collection.insert_one(listing)
@@ -129,13 +129,16 @@ class ZipCodeSearch(object):
         )
 
     def _writesearchtomongo(self, search):
-        mongoclient = MongoClient('localhost', 27017)
-        scraper_db = mongoclient.scraper
+        scraper_db = self.mongoclient.scraper
         search_collection = scraper_db.search
         search_collection.insert_one(search)
 
 
 if __name__ == '__main__':
     import sys
-    zcs = ZipCodeSearch(sys.argv[1], sys.argv[2])
-    zcs.execute()
+
+    from pymongo import MongoClient
+
+    mongoclient = MongoClient('localhost', 27017)
+    zipcodesearch = ZipCodeSearch(sys.argv[1], sys.argv[2], mongoclient)
+    zipcodesearch.execute()
