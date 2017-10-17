@@ -1,17 +1,29 @@
-'''rentscraper.scraper
-'''
+"""rentscraper.scraper"""
 import sys
 
 from log import get_configured_logger
 from pymongo import MongoClient
 
-from listingscraper import ListingScraper
+from contentscraper import ContentScraper
 from zipcoderequest import ZipCodeRequest
 from zipcodesearch import ZipCodeSearch
 
 def main(argv):
-    if len(argv) < 3:
-        raise ValueError('Must provide city and state')
+    """Main entry-point for scraper application.
+
+    Arguments:
+        argv: list of command line arguments
+
+    argv must contain 3 arguments:
+        [0]: standard, name of the file
+        [1]: city
+        [2]: state
+
+    Raises:
+        ValueError: Must provide both city and stats
+    """
+    if len(argv) != 3:
+        raise ValueError('Must provide both city and state')
 
     city = argv[1]
     state = argv[2]
@@ -25,8 +37,9 @@ def main(argv):
         zipcodesearch.execute()
         logger.info('Compiled results for zip code {}'.format(zipcode))
 
-        listingscraper = ListingScraper(city, zipcode, mongoclient)
-        listingscraper.execute()
+    for zipcode in zipcodes:
+        contentscraper = ContentScraper(city, zipcode, mongoclient)
+        contentscraper.execute()
         logger.info('Gathered listings for zip code {}'.format(zipcode)
 
 if __name__ == '__main__':
