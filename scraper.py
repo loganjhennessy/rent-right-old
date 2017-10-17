@@ -1,4 +1,5 @@
 import pprint
+import re
 import requests
 import sys
 from bs4 import BeautifulSoup
@@ -20,23 +21,14 @@ def fetch_search_results(
 def extract_listings(parsed):
     listings = parsed.find_all('li', class_='result-row')
     extracted = []
-    for listing in listings:
+    for i, listing in enumerate(listings):
         link = listing.find('a', class_='result-title')
         price = listing.find('span', class_='result-price')
-        housing = listing.find('span',  class_='housing')
-        if housing != None:
-            print("We're good")
-        else:
-            print('Uh-oh')
-            pprint.pprint(listing)
-
         this_listing = {
             'description': link.string.strip(),
-            'link': link.attrs['href'],
-            'housing': list(housing.children)[0],
+            'link': link.attrs['href']
         }
         extracted.append(this_listing)
-        # import  pdb; pdb.set_trace() # TODO: TEMPORARY BREAKPOINT
     return extracted
 
 def parse_source(html, encoding='utf-8'):
@@ -57,7 +49,14 @@ if __name__ == '__main__':
         )
     doc = parse_source(html, encoding)
     listings = extract_listings(doc)
-    # print(doc.prettify(encoding=encoding))
     print(len(listings))
-    # print(listings[0].prettify())
     pprint.pprint(listings[0])
+
+
+def match_listings(tag):
+    return tag.get_attribute_list('class') == ['result-row'] and \
+           len(tag.find_all('span', class_='housing')) > 0
+
+def parse_housing(housing):
+    rooms, sqft = re.findall('[a-zA-Z0-9]+', housing)
+    return rooms, sqft
