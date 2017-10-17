@@ -36,7 +36,7 @@ def main(argv):
     scrape_content(city, zipcode, mongoclient)
 
 def get_zips(city, state):
-    """Get zip codes for the input city and state
+    """Get zip codes for the input city and state.
 
     Uses the Zip Code API at https://www.zipcodeapi.com. Requies ZIP_KEY
     environment variable set to your Zip Code API key. This can be obtained for
@@ -54,7 +54,7 @@ def get_zips(city, state):
     return zipcodes
 
 def run_search(city, zipcode, mongoclient):
-    """Run a search for listings in a specific zip code and write to mongoDB
+    """Run a search for listings in a specific zip code and write to mongoDB.
 
     City is required as well because it is part of the base URL for searching.
 
@@ -70,7 +70,7 @@ def run_search(city, zipcode, mongoclient):
         logger.info('Compiled results for zip code {}'.format(zipcode))
 
 def scrape_content(zipcode, mongoclient):
-    """Scrape listing content for a particular zip code and write to mongo
+    """Scrape listing content for a particular zip code and write to mongo.
 
     Arguments:
         zipcode: str, the zipcode to search in for listings
