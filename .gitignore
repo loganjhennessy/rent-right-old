@@ -1,3 +1,6 @@
 .ipynb_checkpoints
+
+logs/
 scratch/
+
 __pycache__
