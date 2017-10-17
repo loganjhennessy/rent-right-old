@@ -8,7 +8,7 @@ from log import get_configured_logger
 from requests.exceptions import ProxyError, SSLError
 from requests.packages.urllib3.exceptions import MaxRetryError
 
-class ListingScraper(object):
+class ContentScraper(object):
 
     def __init__(self, zipcode, mongoclient):
         self.logger = get_configured_logger('DEBUG', __name__)
@@ -27,7 +27,7 @@ class ListingScraper(object):
         listings = self._query_listings()
 
         self.logger.info(
-            'Found {} listings for this zip code'.format(
+            'Found {} new listings for this zip code'.format(
                 listings.count()
             )
         )
@@ -38,11 +38,14 @@ class ListingScraper(object):
             self.logger.info('Scraping details for: {}'.format(url))
             content = self._scrape_details(url)
             self.logger.info('Writing to mongo')
-            self._writedetailstomongo(url, content)
+            self._writedetailstomongo(url, content, listing)
 
     def _query_listings(self):
         scraper_db = self.mongoclient.scraper
-        listings = scraper_db.listing.find({ "zipcode": self.zipcode })
+        listings = scraper_db.listing.find({
+            "zipcode": self.zipcode,
+            "content_acquired": False
+        })
         return listings
 
     def _scrape_details(self, url):
@@ -87,14 +90,18 @@ class ListingScraper(object):
 
         return resp.content
 
-    def _writedetailstomongo(self, url, content):
+    def _writedetailstomongo(self, url, content, listing):
         scraper_db = self.mongoclient.scraper
-        detail = {
-            'content': content,
-            'timestamp': datetime.datetime.utcnow(),
-            'link': url,
-            'zipcode': self.zipcode
-        }
+        query = {"_id": listing['_id']}
+        listing_collection = scraper_db.listing
+        listing_collection.update_one(
+            {"_id": listing['_id']},
+            {"$set": {
+                "content": content,
+                "content_acquired": True,
+                "time_content_acquired": datetime.datetime.utcnow()
+            }}
+        )
 
 if __name__ == '__main__':
     import sys
