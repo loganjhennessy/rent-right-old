@@ -1,12 +1,12 @@
 import logging
 import os
 
-dir_path = os.path.dirname(os.path.realpath(__file__)
-logfile = dir_path + '/' + __file__
-
 loggers = {}
 
 def get_configured_logger(level, name):
+
+    dir_path = dir_path = os.path.dirname(os.path.realpath(__file__))
+    logfile = dir_path + '/logs/' + name + '.log'
 
     if loggers.get(name):
         return loggers.get(name)
