@@ -58,7 +58,7 @@ class ZipCodeSearch(object):
         self._writelistingstomongo(listings)
 
         for s in range(120, int(count), 120):
-            time.sleep(1)
+            time.sleep(10)
             content = self._search(str(s))
             listings = self._parseresults(content, str(s))
             self._writelistingstomongo(listings)
@@ -126,38 +126,35 @@ class ZipCodeSearch(object):
             resp = requests.get(url,headers=headers,params=params,proxies=proxies)
         except ProxyError:
             self.logger.info('Caught ProxyError, retrying...')
-            time.sleep(4)
+            time.sleep(30)
             resp = requests.get(url,headers=headers,params=params,proxies=proxies)
         except SSLError:
             self.logger.info('Caught SSLError, retrying...')
-            time.sleep(4)
+            time.sleep(30)
             resp = requests.get(url,headers=headers,params=params,proxies=proxies)
         except MaxRetryError:
             self.logger.info('Caught MaxRetryError, retrying...')
-            time.sleep(4)
+            time.sleep(30)
             resp = requests.get(url,headers=headers,params=params,proxies=proxies)
 
         retries = 0
         while resp.status_code != 200 and retries < 5:
             self.logger.info('Invalid response, retrying...')
-            time.sleep(4)
+            time.sleep(30)
             try:
                 resp = requests.get(url,headers=headers,params=params,proxies=proxies)
             except ProxyError:
                 self.logger.info('Caught ProxyError, retrying...')
-                time.sleep(4)
+                time.sleep(30)
                 resp = requests.get(url,headers=headers,params=params,proxies=proxies)
             except SSLError:
                 self.logger.info('Caught SSLError, retrying...')
-                time.sleep(4)
+                time.sleep(30)
                 resp = requests.get(url,headers=headers,params=params,proxies=proxies)
             except MaxRetryError:
                 self.logger.info('Caught MaxRetryError, retrying...')
-                time.sleep(4)
+                time.sleep(30)
                 resp = requests.get(url,headers=headers,params=params,proxies=proxies)
-
-            time.sleep(4)
-
             retries += 1
 
         search = {
