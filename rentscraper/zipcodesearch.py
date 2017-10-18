@@ -82,6 +82,29 @@ class ZipCodeSearch(object):
             count = soup.select('.totalcount')[0].text
         return count
 
+    def _isdup(self, listing):
+        """Check database for prior existence of listing.
+
+        Arguments:
+            listing: dict representing one listing record
+
+        Returns:
+            bool: True if listing exists in db, else False
+        """
+        scraper_db = self.mongoclient.scraper
+        query = {
+            "clid": listing['clid'],
+            "title": listing['title'],
+            "zipcode": listing['zipcode']
+        }
+        # self.logger.debug('Checking for duplicates')
+        listing_collection = scraper_db.listing
+
+        count = listing_collection.find(query).count()
+        # self.logger.debug('Found {} existing records like this'.format(count))
+        
+        return count > 0
+
     def _parseresults(self, content, s='0'):
         """Parse results of a search for link and title.
 
@@ -97,11 +120,13 @@ class ZipCodeSearch(object):
         resulttitles = soup.select('.result-title.hdrlnk')
         for title in resulttitles:
             listing = {
+                'clid': title.attrs['data-id'],
                 'content_acquired': False,
                 'imgs_acquired': False,
                 'link': title.attrs['href'],
                 's': s,
                 'time_added': datetime.datetime.utcnow(),
+                'time_observed': datetime.datetime.utcnow(),
                 'title': title.text,
                 'zipcode': self.zipcode
             }
@@ -170,12 +195,18 @@ class ZipCodeSearch(object):
         """
         scraper_db = self.mongoclient.scraper
         listing_collection = scraper_db.listing
+        new_count = 0
         for listing in listings:
-            listing_collection.insert_one(listing)
-        self.logger.info('Wrote {} listings to MongoDB'.format(
-                len(listings)
-            )
-        )
+            if self._isdup(listing):
+                query = {"_id": listing['clid']}
+                listing_collection.update_one(query, {
+                    "$set": {"time_observed": datetime.datetime.utcnow()}
+                })
+            else:
+                listing_collection.insert_one(listing)
+                new_count += 1
+        
+        self.logger.info('Wrote {} new listings to MongoDB'.format(new_count))
 
     def _writesearchtomongo(self, search):
         """Write the results of a serach to mongoDB.
