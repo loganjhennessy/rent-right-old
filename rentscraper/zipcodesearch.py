@@ -15,8 +15,9 @@ class ZipCodeSearch(object):
         base: base URL for the search
         city: used to complete the base URL
         logger: self explanatory
+        mongoclient: MongoClient object for writing results
         proxy: proxy IP set by env var HTTP_PROXY
-        ua: UserAgent object to generate random user agnets
+        ua: UserAgent object to generate random user agents
         zipcode: zip code for this search
     """
 
@@ -25,6 +26,7 @@ class ZipCodeSearch(object):
 
         base is set to value of BASE_URL environment variable
         proxy is set to value of HTTP_PROXY environment variable
+        logger is retrieved from get_configured_logger function
         """
         self.base = os.environ['BASE_URL']
         self.city = city.lower()
