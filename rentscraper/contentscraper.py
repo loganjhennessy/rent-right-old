@@ -48,6 +48,8 @@ class ContentScraper(object):
             'Found {} new listings for this zip code'.format(listings.count())
         )
 
+        total_listings = listings.count()
+
         for i, listing in enumerate(listings):
             time.sleep(self.sleepshort)
             url = listing['link']
@@ -55,7 +57,7 @@ class ContentScraper(object):
             content = self._scrape_details(url)
             self._writedetailstomongo(url, content, listing)
             self.logger.info('Listing {} of {} written to MongoDB.'.format(
-                i, listings.count()
+                i + 1, total_listings
             ))
 
     def _query_listings(self):
