@@ -111,7 +111,7 @@ class ZipCodeSearch(object):
 
         Returns:
             str: content of the HTTP response
-        """"
+        """
         url = self.base.format(self.city)
         headers = {'User-Agent': self.ua.random}
         params = {'postal': self.zipcode, 'availabilityMode': '0'}
