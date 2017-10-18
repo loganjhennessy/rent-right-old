@@ -18,22 +18,27 @@ def main(argv):
         [0]: standard, name of the file
         [1]: city
         [2]: state
+        [3]: run option (search, scrape, or both)
 
     Raises:
-        ValueError: Must provide both city and stats
+        ValueError: Must provide city, state, and run option
     """
-    if len(argv) != 3:
-        raise ValueError('Must provide both city and state')
+    if len(argv) != 4:
+        raise ValueError('Must provide city, state, and ruun option')
 
     city = argv[1]
     state = argv[2]
+    run_option = argv[3]
 
     zipcodes = get_zips(city, state)
 
     mongoclient = MongoClient('localhost', 27017)
 
-    run_search(city, zipcode, mongoclient)
-    scrape_content(city, zipcode, mongoclient)
+    if run_option == 'search' or run_option == 'both':
+        run_search(city, zipcode, mongoclient)
+
+    if run_option == 'scrape' or run_option == 'both':
+        scrape_content(city, zipcode, mongoclient)
 
 def get_zips(city, state):
     """Get zip codes for the input city and state.
