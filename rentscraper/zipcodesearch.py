@@ -90,7 +90,7 @@ class ZipCodeSearch(object):
         for title in resulttitles:
             listing = {
                 'content_acquired': False,
-                'imgs_acquired': False
+                'imgs_acquired': False,
                 'link': title.attrs['href'],
                 's': s,
                 'time_added': datetime.datetime.utcnow(),
