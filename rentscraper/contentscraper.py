@@ -31,13 +31,13 @@ class ContentScraper(object):
         self.logger = get_configured_logger('DEBUG', __name__)
         self.mongoclient = mongoclient
         self.proxy = os.environ['HTTP_PROXY']
+        self.sleeplong = 5
+        self.sleepshort = 0.5
         self.ua = UserAgent()
         self.zipcode = zipcode
 
         self.logger.info(
-            'ListingScraper initialized for zip code {}'.format(
-                self.zipcode
-            )
+            'ListingScraper initialized for zip code {}'.format(self.zipcode)
         )
 
     def execute(self):
@@ -45,13 +45,11 @@ class ContentScraper(object):
         listings = self._query_listings()
 
         self.logger.info(
-            'Found {} new listings for this zip code'.format(
-                listings.count()
-            )
+            'Found {} new listings for this zip code'.format(listings.count())
         )
 
         for i, listing in enumerate(listings):
-            time.sleep(1)
+            time.sleep(self.sleepshort)
             url = listing['link']
             self.logger.info('Scraping details for: {}'.format(url))
             content = self._scrape_details(url)
@@ -91,41 +89,23 @@ class ContentScraper(object):
         headers = {'User-Agent': self.ua.random}
         proxies = {'http': self.proxy, 'https': self.proxy}
 
-        try:
-            resp = requests.get(url, headers=headers, proxies=proxies)
-        except ProxyError:
-            self.logger.info('Caught ProxyError, retrying...')
-            time.sleep(4)
-            resp = requests.get(url, headers=headers, proxies=proxies)
-        except SSLError:
-            self.logger.info('Caught SSLError, retrying...')
-            time.sleep(4)
-            resp = requests.get(url, headers=headers, proxies=proxies)
-        except MaxRetryError:
-            self.logger.info('Caught SSLError, retrying...')
-            time.sleep(4)
-            resp = requests.get(url, headers=headers, proxies=proxies)
-
-        retries = 0
-        while resp.status_code != 200 and retries < 5:
-            self.logger.info('Invalid response, retrying...')
-            time.sleep(4)
+        while True:
             try:
                 resp = requests.get(url, headers=headers, proxies=proxies)
-            except ProxyError:
-                self.logger.info('Caught ProxyError, retrying...')
-                time.sleep(4)
-                resp = requests.get(url, headers=headers, proxies=proxies)
-            except SSLError:
-                self.logger.info('Caught SSLError, retrying...')
-                time.sleep(4)
-                resp = requests.get(url, headers=headers, proxies=proxies)
-            except MaxRetryError:
-                self.logger.info('Caught SSLError, retrying...')
-                time.sleep(4)
-                resp = requests.get(url, headers=headers, proxies=proxies)
-
-            retries += 1
+                if resp.status_code != 200:
+                    raise Exception(
+                            'Response contained invalid '
+                            'status code {}'.format(resp.status_code)
+                          )
+                break
+            except Exception as e:
+                self.logger.info('Exception occurred during request.')
+                self.logger.info('{}'.format(e))
+                self.logger.info(
+                    'Sleeping for {} seconds'.format(self.sleeplong)
+                )
+                time.sleep(self.sleeplong)
+                self.logger.info('Retrying')
 
         return resp.content
 
