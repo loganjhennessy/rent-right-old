@@ -1,5 +1,4 @@
-'''rentscraper.zipcodesearch
-'''
+"""rentscraper.zipcodesearch"""
 import datetime
 import os
 import requests
@@ -10,7 +9,7 @@ from fake_useragent import UserAgent
 from log import get_configured_logger
 
 class ZipCodeSearch(object):
-    '''Implements a search for all rental listings by zip code.
+    """Implements a search for all rental listings by zip code.
 
     Attributes:
         base: base URL for the search
@@ -19,10 +18,14 @@ class ZipCodeSearch(object):
         proxy: proxy IP set by env var HTTP_PROXY
         ua: UserAgent object to generate random user agnets
         zipcode: zip code for this search
-
-    '''
+    """
 
     def __init__(self, city, zipcode, mongoclient):
+        """Init ZipCodeSearch object with city, zipcode, and mongoclient.
+
+        base is set to value of BASE_URL environment variable
+        proxy is set to value of HTTP_PROXY environment variable
+        """
         self.base = os.environ['BASE_URL']
         self.city = city.lower()
         self.logger = get_configured_logger('DEBUG', __name__)
@@ -38,7 +41,7 @@ class ZipCodeSearch(object):
         )
 
     def execute(self):
-    '''Executes a zip code search for rental properties'''
+        """Executes a zip code search for rental properties."""
         results = []
         content = self._search()
         results.append(content)
@@ -57,20 +60,38 @@ class ZipCodeSearch(object):
             self._writelistingstomongo(listings)
 
     def _countresults(self, content):
-        '''return number of results found in content'''
+        """Return number of results found in content.
+
+        Arguments:
+            content: str containing the contents of a search query response
+
+        Returns:
+            int: count of listings found in search
+        """
         soup = BeautifulSoup(content, 'html.parser')
         count = soup.select('.totalcount')[0].text
         return count
 
     def _parseresults(self, content, s='0'):
+        """Parse results of a search for link and title.
+
+        Arguments:
+            content: str containing the contents of a search query response
+            s: str, the current 'page' of serch results, defaults to '0'
+
+        Returns:
+            list of dicts representing parsed listings
+        """
         listings = []
         soup = BeautifulSoup(content, 'html.parser')
         resulttitles = soup.select('.result-title.hdrlnk')
         for title in resulttitles:
             listing = {
+                'content_acquired': False,
+                'imgs_acquired': False
                 'link': title.attrs['href'],
                 's': s,
-                'timestamp': datetime.datetime.utcnow(),
+                'time_added': datetime.datetime.utcnow(),
                 'title': title.text,
                 'zipcode': self.zipcode
             }
@@ -79,7 +100,16 @@ class ZipCodeSearch(object):
         return listings
 
     def _search(self, s=None):
-        '''get a page of search results'''
+        """Get a page of search results.
+
+        Includes re-try logic in case of bad proxy.
+
+        Arguments:
+            s: str, the search result index to start at, defaults to None
+
+        Returns:
+            str: content of the HTTP response
+        """"
         url = self.base.format(self.city)
         headers = {'User-Agent': self.ua.random}
         params = {'postal': self.zipcode, 'availabilityMode': '0'}
@@ -119,6 +149,14 @@ class ZipCodeSearch(object):
         return resp.content
 
     def _writelistingstomongo(self, listings):
+        """Write a list of listing dicts to mongoDB.
+
+        Data is written to the 'scraper' database in a collection named
+        'listings'.
+
+        Arguments:
+            listings: list of dicts containing listings
+        """
         scraper_db = self.mongoclient.scraper
         listing_collection = scraper_db.listing
         for listing in listings:
@@ -129,6 +167,14 @@ class ZipCodeSearch(object):
         )
 
     def _writesearchtomongo(self, search):
+        """Write the results of a serach to mongoDB.
+
+        Data is written to the 'scraper' database in a collection named
+        'search'.
+
+        Arguments:
+            search: dict containing meta-information about a search.
+        """
         scraper_db = self.mongoclient.scraper
         search_collection = scraper_db.search
         search_collection.insert_one(search)
