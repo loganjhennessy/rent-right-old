@@ -72,7 +72,7 @@ def run_search(city, zipcodes, mongoclient):
     for zipcode in zipcodes:
         zipcodesearch = ZipCodeSearch(city, zipcode, mongoclient)
         zipcodesearch.execute()
-        logger.info('Compiled results for zip code {}'.format(zipcode))
+        logger.info('Compiled listings for zip code {}'.format(zipcode))
 
 def scrape_content(zipcodes, mongoclient):
     """Scrape listing content for a particular zip code and write to mongo.
