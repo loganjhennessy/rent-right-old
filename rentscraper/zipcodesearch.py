@@ -17,6 +17,8 @@ class ZipCodeSearch(object):
         logger: self explanatory
         mongoclient: MongoClient object for writing results
         proxy: proxy IP set by env var HTTP_PROXY
+        sleeplong: time to wait between subsequent successful requests
+        sleepshort: time to wait after failed request
         ua: UserAgent object to generate random user agents
         zipcode: zip code for this search
     """
@@ -33,8 +35,8 @@ class ZipCodeSearch(object):
         self.logger = get_configured_logger('DEBUG', __name__)
         self.mongoclient = mongoclient
         self.proxy = os.environ['HTTP_PROXY']
-        self.sleeplong = 10
-        self.sleepshort = 1
+        self.sleeplong = 5
+        self.sleepshort = 0.5
         self.ua = UserAgent()
         self.zipcode = zipcode
 
@@ -54,7 +56,7 @@ class ZipCodeSearch(object):
             'Found {} results for this zip code'.format(count)
         )
         
-        if count > 0:
+        if int(count) > 0:
             listings = self._parseresults(content)
             self._writelistingstomongo(listings)
 
@@ -146,49 +148,12 @@ class ZipCodeSearch(object):
                 time.sleep(self.sleeplong)
                 self.logger.info('Retrying')
 
-        
-
-#        try:
-#            resp = requests.get(url,headers=headers,params=params,proxies=proxies)
-#        except ProxyError:
-#            self.logger.info('Caught ProxyError, retrying...')
-#            time.sleep(10)
-#            resp = requests.get(url,headers=headers,params=params,proxies=proxies)
-#        except SSLError:
-#            self.logger.info('Caught SSLError, retrying...')
-#            time.sleep(10)
-#            resp = requests.get(url,headers=headers,params=params,proxies=proxies)
-#        except MaxRetryError:
-#            self.logger.info('Caught MaxRetryError, retrying...')
-#            time.sleep(10)
-#            resp = requests.get(url,headers=headers,params=params,proxies=proxies)
-#
-#        retries = 0
-#        while resp.status_code != 200 and retries < 5:
-#            self.logger.info('Invalid response, retrying...')
-#            time.sleep(10)
-#            try:
-#                resp = requests.get(url,headers=headers,params=params,proxies=proxies)
-#            except ProxyError:
-#                self.logger.info('Caught ProxyError, retrying...')
-#                time.sleep(10)
-#                resp = requests.get(url,headers=headers,params=params,proxies=proxies)
-#            except SSLError:
-#                self.logger.info('Caught SSLError, retrying...')
-#                time.sleep(10)
-#                resp = requests.get(url,headers=headers,params=params,proxies=proxies)
-#            except MaxRetryError:
-#                self.logger.info('Caught MaxRetryError, retrying...')
-#                time.sleep(10)
-#                resp = requests.get(url,headers=headers,params=params,proxies=proxies)
-#            retries += 1
-
         search = {
             'content': resp.content,
             'headers': headers,
             'params': params,
             'proxies': proxies,
-            'timestamp': datetime.datetime.utcnow(),
+            'time_searched': datetime.datetime.utcnow(),
             'url': url
         }
         self._writesearchtomongo(search)
