@@ -50,13 +50,15 @@ class ContentScraper(object):
             )
         )
 
-        for listing in listings:
+        for i, listing in enumerate(listings):
             time.sleep(1)
             url = listing['link']
             self.logger.info('Scraping details for: {}'.format(url))
             content = self._scrape_details(url)
-            self.logger.info('Writing to mongo')
             self._writedetailstomongo(url, content, listing)
+            self.logger.info('Listing {} of {} written to MongoDB.'.format(
+                i, listings.count()
+            ))
 
     def _query_listings(self):
         """Get a list of listings to scrape.
