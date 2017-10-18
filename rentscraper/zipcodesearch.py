@@ -7,6 +7,7 @@ import time
 from bs4 import BeautifulSoup
 from fake_useragent import UserAgent
 from log import get_configured_logger
+from proxies import Proxies
 from requests.exceptions import ProxyError, SSLError
 from requests.packages.urllib3.exceptions import MaxRetryError
 
@@ -34,7 +35,8 @@ class ZipCodeSearch(object):
         self.city = city.lower()
         self.logger = get_configured_logger('DEBUG', __name__)
         self.mongoclient = mongoclient
-        self.proxy = os.environ['HTTP_PROXY']
+        # self.proxy = os.environ['HTTP_PROXY']
+        self.proxy = Proxies()
         self.ua = UserAgent()
         self.zipcode = zipcode
 
@@ -58,7 +60,7 @@ class ZipCodeSearch(object):
         self._writelistingstomongo(listings)
 
         for s in range(120, int(count), 120):
-            time.sleep(10)
+            time.sleep(5)
             content = self._search(str(s))
             listings = self._parseresults(content, str(s))
             self._writelistingstomongo(listings)
@@ -117,7 +119,7 @@ class ZipCodeSearch(object):
         url = self.base.format(self.city)
         headers = {'User-Agent': self.ua.random}
         params = {'postal': self.zipcode, 'availabilityMode': '0'}
-        proxies = {'http': self.proxy, 'https': self.proxy}
+        proxies = {'http': self.proxy.proxy(), 'https': self.proxy.proxy()}
 
         if s:
             params['s'] = s
@@ -126,34 +128,34 @@ class ZipCodeSearch(object):
             resp = requests.get(url,headers=headers,params=params,proxies=proxies)
         except ProxyError:
             self.logger.info('Caught ProxyError, retrying...')
-            time.sleep(30)
+            time.sleep(10)
             resp = requests.get(url,headers=headers,params=params,proxies=proxies)
         except SSLError:
             self.logger.info('Caught SSLError, retrying...')
-            time.sleep(30)
+            time.sleep(10)
             resp = requests.get(url,headers=headers,params=params,proxies=proxies)
         except MaxRetryError:
             self.logger.info('Caught MaxRetryError, retrying...')
-            time.sleep(30)
+            time.sleep(10)
             resp = requests.get(url,headers=headers,params=params,proxies=proxies)
 
         retries = 0
         while resp.status_code != 200 and retries < 5:
             self.logger.info('Invalid response, retrying...')
-            time.sleep(30)
+            time.sleep(10)
             try:
                 resp = requests.get(url,headers=headers,params=params,proxies=proxies)
             except ProxyError:
                 self.logger.info('Caught ProxyError, retrying...')
-                time.sleep(30)
+                time.sleep(10)
                 resp = requests.get(url,headers=headers,params=params,proxies=proxies)
             except SSLError:
                 self.logger.info('Caught SSLError, retrying...')
-                time.sleep(30)
+                time.sleep(10)
                 resp = requests.get(url,headers=headers,params=params,proxies=proxies)
             except MaxRetryError:
                 self.logger.info('Caught MaxRetryError, retrying...')
-                time.sleep(30)
+                time.sleep(10)
                 resp = requests.get(url,headers=headers,params=params,proxies=proxies)
             retries += 1
 
