@@ -1,6 +1,10 @@
 import logging
+import os
 
-logfile = '/home/lhennessy/rent-scraper/rentscraper/scraper.log'
+dir_path = os.path.dirname(os.path.realpath(__file__)
+logfile = dir_path + '/' + __file__
+
+loggers = {}
 
 def get_configured_logger(level, name):
 
@@ -10,20 +14,23 @@ def get_configured_logger(level, name):
     else:
         logger = logging.getLogger(name)
         logger.setLevel(getattr(logging,level))
+        
+        if not logger.handlers:
+            ch = logging.StreamHandler()
+            ch.setLevel(getattr(logging,level))
 
-        ch = logging.StreamHandler()
-        ch.setLevel(getattr(logging,level))
+            fh = logging.FileHandler(logfile)
+            fh.setLevel(getattr(logging,level))
 
-        fh = logging.FileHandler(logfile)
-        fh.setLevel(getattr(logging,level))
+            format_string = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+            formatter = logging.Formatter(format_string)
 
-        format_string = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-        formatter = logging.Formatter(format_string)
+            ch.setFormatter(formatter)
+            fh.setFormatter(formatter)
 
-        ch.setFormatter(formatter)
-        fh.setFormatter(formatter)
+            logger.addHandler(ch)
+            logger.addHandler(fh)
 
-        logger.addHandler(ch)
-        logger.addHandler(fh)
+        loggers.update(dict(name=logger))
 
         return logger
