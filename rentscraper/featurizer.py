@@ -30,7 +30,7 @@ def queryforlistings(mongoclient):
         listings: list
     """
     listing_collection = mongoclient.scraper.listing
-    listings = listing_collection.find()
+    listings = listing_collection.find(timeout=False)
     return listings
 
 def main(argv):
