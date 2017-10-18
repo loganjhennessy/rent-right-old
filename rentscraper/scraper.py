@@ -35,10 +35,10 @@ def main(argv):
     mongoclient = MongoClient('localhost', 27017)
 
     if run_option == 'search' or run_option == 'both':
-        run_search(city, zipcode, mongoclient)
+        run_search(city, zipcodes, mongoclient)
 
     if run_option == 'scrape' or run_option == 'both':
-        scrape_content(city, zipcode, mongoclient)
+        scrape_content(city, zipcodes, mongoclient)
 
 def get_zips(city, state):
     """Get zip codes for the input city and state.
@@ -58,7 +58,7 @@ def get_zips(city, state):
     zipcodes = zipcoderequest.execute()
     return zipcodes
 
-def run_search(city, zipcode, mongoclient):
+def run_search(city, zipcodes, mongoclient):
     """Run a search for listings in a specific zip code and write to mongoDB.
 
     City is required as well because it is part of the base URL for searching.
@@ -74,7 +74,7 @@ def run_search(city, zipcode, mongoclient):
         zipcodesearch.execute()
         logger.info('Compiled results for zip code {}'.format(zipcode))
 
-def scrape_content(zipcode, mongoclient):
+def scrape_content(zipcodes, mongoclient):
     """Scrape listing content for a particular zip code and write to mongo.
 
     Arguments:
