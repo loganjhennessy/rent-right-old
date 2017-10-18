@@ -55,7 +55,7 @@ class ZipCodeSearch(object):
         self.logger.info(
             'Found {} results for this zip code'.format(count)
         )
-        
+
         if int(count) > 0:
             listings = self._parseresults(content)
             self._writelistingstomongo(listings)
@@ -102,7 +102,7 @@ class ZipCodeSearch(object):
 
         count = listing_collection.find(query).count()
         # self.logger.debug('Found {} existing records like this'.format(count))
-        
+
         return count > 0
 
     def _parseresults(self, content, s='0'):
@@ -156,20 +156,23 @@ class ZipCodeSearch(object):
         while True:
             try:
                 resp = requests.get(
-                        url, 
-                        headers=headers, 
-                        params=params, 
+                        url,
+                        headers=headers,
+                        params=params,
                         proxies=proxies
                        )
                 if resp.status_code != 200:
                     raise Exception(
                             'Response contained invalid '
-                            'status code {}'.format(resp.status_code))
+                            'status code {}'.format(resp.status_code)
+                          )
                 break
             except Exception as e:
                 self.logger.info('Exception occurred during request.')
                 self.logger.info('{}'.format(e))
-                self.logger.info('Sleeping for {} seconds'.format(self.sleeplong))
+                self.logger.info(
+                    'Sleeping for {} seconds'.format(self.sleeplong)
+                )
                 time.sleep(self.sleeplong)
                 self.logger.info('Retrying')
 
@@ -205,7 +208,7 @@ class ZipCodeSearch(object):
             else:
                 listing_collection.insert_one(listing)
                 new_count += 1
-        
+
         self.logger.info('Wrote {} new listings to MongoDB'.format(new_count))
 
     def _writesearchtomongo(self, search):
