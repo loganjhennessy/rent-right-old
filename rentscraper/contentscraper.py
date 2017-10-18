@@ -128,6 +128,7 @@ class ContentScraper(object):
             {"$set": {
                 "content": content,
                 "content_acquired": True,
+                "content_parsed": False,
                 "time_content_acquired": datetime.datetime.utcnow()
             }}
         )
