@@ -94,8 +94,7 @@ class ZipCodeSearch(object):
         scraper_db = self.mongoclient.scraper
         query = {
             "clid": listing['clid'],
-            "title": listing['title'],
-            "zipcode": listing['zipcode']
+            "title": listing['title']
         }
         # self.logger.debug('Checking for duplicates')
         listing_collection = scraper_db.listing
