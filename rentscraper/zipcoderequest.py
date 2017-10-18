@@ -2,6 +2,8 @@
 import os
 import requests
 
+from log import get_configured_logger
+
 class ZipCodeRequest(object):
     """Allows for encapsulated configuration and use of Zip Code API.
 
@@ -26,7 +28,10 @@ class ZipCodeRequest(object):
         )
         self.city = city
         self.form = 'json'
+        self.logger = get_configured_logger('DEBUG', __name__)
         self.state = state
+
+        self.logger.info('ZipCodeRequest initialized')
 
     def execute(self):
         """Uses attributes to make a Zip Code API query.
@@ -43,5 +48,11 @@ class ZipCodeRequest(object):
             self.city,
             self.state
         )
-        resp = requests.get(url)
+        
+        try:
+            resp = requests.get(url)
+        except Exception as e:
+            self.logger.info('Caught exception')
+            self.logger.info('{}'.format(e))
+
         return resp.json()['zip_codes']
