@@ -3,22 +3,27 @@ import logging
 logfile = '/home/lhennessy/rent-scraper/rentscraper/scraper.log'
 
 def get_configured_logger(level, name):
-    logger = logging.getLogger(name)
-    logger.setLevel(getattr(logging,level))
 
-    ch = logging.StreamHandler()
-    ch.setLevel(getattr(logging,level))
+    if loggers.get(name):
+        return loggers.get(name)
 
-    fh = logging.FileHandler(logfile)
-    fh.setLevel(getattr(logging,level))
+    else:
+        logger = logging.getLogger(name)
+        logger.setLevel(getattr(logging,level))
 
-    format_string = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-    formatter = logging.Formatter(format_string)
+        ch = logging.StreamHandler()
+        ch.setLevel(getattr(logging,level))
 
-    ch.setFormatter(formatter)
-    fh.setFormatter(formatter)
+        fh = logging.FileHandler(logfile)
+        fh.setLevel(getattr(logging,level))
 
-    logger.addHandler(ch)
-    logger.addHandler(fh)
+        format_string = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+        formatter = logging.Formatter(format_string)
 
-    return logger
+        ch.setFormatter(formatter)
+        fh.setFormatter(formatter)
+
+        logger.addHandler(ch)
+        logger.addHandler(fh)
+
+        return logger
