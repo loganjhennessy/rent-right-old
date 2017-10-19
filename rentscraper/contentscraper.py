@@ -82,7 +82,7 @@ class ContentScraper(object):
         listings = scraper_db.listing.find({
             "zipcode": self.zipcode,
             "content_acquired": False
-        }, timeout=False)
+        })
         return listings
 
     def _scrape_details(self, url):

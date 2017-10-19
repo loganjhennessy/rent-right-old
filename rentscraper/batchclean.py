@@ -36,7 +36,7 @@ def queryforlistings(mongoclient):
     """
     listing_collection = mongoclient.scraper.listing
     query = {"content_parsed": False}
-    listings = listing_collection.find(query, timeout=False)
+    listings = listing_collection.find(query)
     return listings
 
 def writetomongo(mongoclient):
