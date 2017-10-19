@@ -1,6 +1,9 @@
+# Jupyter notebook checkpoints
 .ipynb_checkpoints
 
+# Exclude local directories
 logs/
 scratch/
 
+# Python generated files
 __pycache__
