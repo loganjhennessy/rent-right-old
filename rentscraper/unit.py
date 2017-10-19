@@ -17,6 +17,8 @@ class Unit(object):
         Numeric:
             bedrooms: int
             bathrooms: int
+            latitude: float
+            longitude: float
             num_images: int
             price: float
             sqft: int
@@ -30,10 +32,12 @@ class Unit(object):
         self.data = {
             'bedrooms': int(),
             'bathrooms': int(),
+            'latitude': float(),
+            'longitude': float(),
             'num_images': int(),
             'price': float(),
             'sqft': int(),
-            # 'description': str(),
+            'description': str(),
             'listing_id': str(),
             'title': str()
         }

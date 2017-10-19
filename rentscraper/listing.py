@@ -28,6 +28,7 @@ class Listing(object):
         """Executes the cleaning of a listing."""
         self._attributes()
         self._description()
+        self._location()
         self._imagemeta()
         self._price()
         self._title()
@@ -54,13 +55,20 @@ class Listing(object):
 
     def _description(self):
         """Parses the text contained in the listing description."""
-        pass
+        description = self.soup.find('sectin', {'id': 'postingbody'}).text
+        self.unit['description'] = description
 
     def _imagemeta(self):
         """Parses the meta data of the images."""
         imageinfostr = self.soup.select('.slider-info')[0].text
         num_images = imageinfo.split()[-1]
         self.unit['num_images'] = int(num_images)
+
+    def _location(self):
+        """Parses the location information from the listing content."""
+        maptag = self.soup.find('div', {'id': 'map'})
+        self.unit['latitude'] = maptag.attrs['data-latitude']
+        self.unit['longitude'] = maptag.attrs['data-longitude']
 
     def _parseattrinfo(self, attrinfo):
         """Parses the boolean attributes about the listing.
