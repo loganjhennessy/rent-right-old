@@ -6,8 +6,6 @@ from pymongo import MongoClient
 
 from listing import Listing
 
-from absl import app
-
 def cleanlistings(listings):
     """Clean a list of listings and return a clean unit object.
 
@@ -67,15 +65,21 @@ def writeunitstomongo(mongoclient, units):
         update = {"$set": {"content_parsed": True}}
         listing_collection.update_one(query, update)
 
-def main(argv):
+def main():
     """Main entry-point for batchclean."""
-    del argv # unused
+    logger = get_configured_logger('DEBUG', __name__)
 
     mongoclient = MongoClient('localhost', 27017)
+    logger.info('Retrieved mongoclient.')
+
     listings = queryforlistings(mongoclient)
+    logger.info('Found {} listings.'.format(listings.count()))
+
     attrs, units = cleanlistings(listings)
+    logger.info('Observed {} unique attributes while cleanin.'.format(len(attrs)))
+    logger.info('Processed {} units'.format(len(units)))
     writeunitstomongo(mongoclient, units)
     writeattrstomongo(mongoclient, attrs)
 
 if __name__ == '__main__':
-    app.run(main)
+    main()
