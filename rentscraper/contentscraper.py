@@ -60,6 +60,15 @@ class ContentScraper(object):
                 i + 1, total_listings
             ))
 
+    def _pagenotfound(self, content):
+        """
+        """
+        soup = BeautifulSoup(content)
+        if soup.select('.page-not-found-heading'):
+            return True
+        else:
+            return False
+
     def _query_listings(self):
         """Get a list of listings to scrape.
 
@@ -94,7 +103,9 @@ class ContentScraper(object):
         while True:
             try:
                 resp = requests.get(url, headers=headers, proxies=proxies)
-                if resp.status_code != 200:
+                if self._pagenotfound(resp.content):
+                    break
+                else resp.status_code != 200:
                     raise Exception(
                             'Response contained invalid '
                             'status code {}'.format(resp.status_code)
