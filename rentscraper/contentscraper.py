@@ -5,6 +5,7 @@ import requests
 import time
 
 from fake_useragent import UserAgent
+from bs4 import BeautifulSoup
 from log import get_configured_logger
 from requests.exceptions import ProxyError, SSLError
 from requests.packages.urllib3.exceptions import MaxRetryError
