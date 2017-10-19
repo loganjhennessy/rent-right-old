@@ -64,8 +64,8 @@ class ContentScraper(object):
     def _pagenotfound(self, content):
         """
         """
-        soup = BeautifulSoup(content)
-        if soup.select('.page-not-found-heading'):
+        soup = BeautifulSoup(content, 'html.parser')
+        if soup.select('.post-not-found-heading'):
             return True
         else:
             return False
