@@ -23,9 +23,10 @@ class Unit(object):
 
         Text:
             description: str
+            listing_id: str
             title: str
     """
-    def __init__(self):
+    def __init__(self, listing_id=None):
         self.data = {
             'bedrooms': int(),
             'bathrooms': int(),
@@ -33,8 +34,17 @@ class Unit(object):
             'price': float(),
             'sqft': int(),
             # 'description': str(),
+            'listing_id': str(),
             'title': str()
         }
+        for attr in self._readattrs():
+            self.data[attr] = bool()
+
+        if listing_id:
+            self.data['listing_id'] = listing_id
+
+    def _readattrs(self):
+        return attrs
 
     def __getitem__(self, item):
         return self.data[item]

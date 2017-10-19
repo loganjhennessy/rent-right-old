@@ -21,7 +21,7 @@ def cleanlistings(listings):
     units = []
     attrs = set()
     for listing in listings:
-        l = Listing(listing['content'])
+        l = Listing(listing['content'], listing['_id'])
         unit = l.clean()
         units.append(unit)
         attrs.update(l.getattrs())
@@ -38,7 +38,7 @@ def queryforlistings(mongoclient):
         listings: list
     """
     listing_collection = mongoclient.scraper.listing
-    query = {"content_parsed": False}
+    query = {"content_parsed": False, "content_acquired": True}
     listings = listing_collection.find(query)
     return listings
 
