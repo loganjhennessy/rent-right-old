@@ -105,6 +105,7 @@ class ContentScraper(object):
             try:
                 resp = requests.get(url, headers=headers, proxies=proxies)
                 if self._pagenotfound(resp.content):
+                    self.logger.info('Page not found.')
                     break
                 if resp.status_code != 200:
                     raise Exception(
