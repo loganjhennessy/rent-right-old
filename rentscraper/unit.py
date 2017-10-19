@@ -1,23 +1,47 @@
 """rentscraper.unit"""
 
 class Unit(object):
-    """
+    """Implements a class to represent a single Unit.
 
     Attributes:
-        apartment: bool
-        bedrooms: int
-        bathrooms: int
-        cats_ok: bool
-        dogs_ok: bool
-        laundry_on_site: bool
-        no_smoking: bool
-        num_images: int
-        off_street_parking: bool
-        price: float
-        street_parking: bool
-        sqft: int
-        wheelchair_accessible: bool
-    """
+        Boolean:
+            apartment: bool
+            cats_ok: bool
+            dogs_ok: bool
+            laundry_on_site: bool
+            no_smoking: bool
+            off_street_parking: bool
+            street_parking: bool
+            wheelchair_accessible: bool
 
+        Numeric:
+            bedrooms: int
+            bathrooms: int
+            num_images: int
+            price: float
+            sqft: int
+
+        Text:
+            description: str
+            title: str
+    """
     def __init__(self):
-        pass
+        self.data = {
+            'bedrooms': int(),
+            'bathrooms': int(),
+            'num_images': int(),
+            'price': float(),
+            'sqft': int(),
+            # 'description': str(),
+            'title': str()
+        }
+
+    def __getitem__(self, item):
+        return self.data[item]
+
+    def __iter__(self, item):
+        for key, val in  self.data.items():
+            yield key, val
+
+    def __setitem__(self, item, val):
+        self.data[item] = val
