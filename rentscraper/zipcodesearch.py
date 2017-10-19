@@ -99,7 +99,7 @@ class ZipCodeSearch(object):
         # self.logger.debug('Checking for duplicates')
         listing_collection = scraper_db.listing
 
-        count = listing_collection.find(query).count()
+        count = listing_collection.find(query, no_cursor_timeout=True).count()
         # self.logger.debug('Found {} existing records like this'.format(count))
 
         return count > 0

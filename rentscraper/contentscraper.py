@@ -61,8 +61,14 @@ class ContentScraper(object):
                 i + 1, total_listings
             ))
 
-    def _pagenotfound(self, content):
-        """
+    def _postnotfound(self, content):
+        """Returns whether or not the page has a .post-not-found-heading
+
+        Arguments:
+            content: str of content
+
+        Returns:
+            bool: True if content has .post-not-found-heading class
         """
         soup = BeautifulSoup(content, 'html.parser')
         if soup.select('.post-not-found-heading'):
@@ -83,7 +89,7 @@ class ContentScraper(object):
         listings = scraper_db.listing.find({
             "zipcode": self.zipcode,
             "content_acquired": False
-        })
+        }, no_cursor_timeout=True)
         return listings
 
     def _scrape_details(self, url):
@@ -104,7 +110,7 @@ class ContentScraper(object):
         while True:
             try:
                 resp = requests.get(url, headers=headers, proxies=proxies)
-                if self._pagenotfound(resp.content):
+                if self._postnotfound(resp.content):
                     self.logger.info('Page not found.')
                     break
                 if resp.status_code != 200:
