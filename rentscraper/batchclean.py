@@ -128,8 +128,11 @@ def main():
     )
     removelistings(mongoclient, removed)
 
+    listings = queryforlistings(mongoclient)
     attrs, units = cleanlistings(listings)
-    logger.info('Observed {} unique attributes while cleanin.'.format(len(attrs)))
+    logger.info(
+        'Observed {} unique attributes while cleanin.'.format(len(attrs))
+    )
     logger.info('Processed {} units'.format(len(units)))
     writeunitstomongo(mongoclient, units)
     writeattrstomongo(mongoclient, attrs)
