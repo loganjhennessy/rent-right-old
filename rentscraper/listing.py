@@ -21,7 +21,7 @@ class Listing(object):
         self.attrset = set()
         self.content = content
         self.listing_id = listing_id
-        self.soup = BeautifulSoup(self.content)
+        self.soup = BeautifulSoup(self.content, 'html.parser')
         self.unit = Unit(listing_id)
 
     def clean(self):
@@ -55,13 +55,16 @@ class Listing(object):
 
     def _description(self):
         """Parses the text contained in the listing description."""
-        description = self.soup.find('sectin', {'id': 'postingbody'}).text
+        description = self.soup.find('section', {'id': 'postingbody'}).text
         self.unit['description'] = description
 
     def _imagemeta(self):
         """Parses the meta data of the images."""
-        imageinfostr = self.soup.select('.slider-info')[0].text
-        num_images = imageinfo.split()[-1]
+        num_images = 0
+        if self.soup.find('span', {'class': 'slider-info'}):
+            imageinfostr = self.soup.select('.slider-info')[0].text
+            num_images = imageinfostr.split()[-1]
+       
         self.unit['num_images'] = int(num_images)
 
     def _location(self):
@@ -79,7 +82,7 @@ class Listing(object):
         Arguments:
             attrinfo: BeautifulSoup tag containing attrs.
         """
-        attributes = attrgroup.findAll('span')
+        attributes = attrinfo.findAll('span')
         for attr in attributes:
             self.attrset.add(attr.text)
             self.unit[attr.text] = True
@@ -105,7 +108,7 @@ class Listing(object):
         """
         pricetag = self.soup.find('span', {'class': 'price'})
         pricestr = pricetag.text.strip('$')
-        self.unit['price'] float(pricestr)
+        self.unit['price'] = float(pricestr)
 
     def _title(self):
         """Parse the title of the listsing.

@@ -16,13 +16,21 @@ def cleanlistings(listings):
         attrs: set of boolean attributes found in all the listings
         units: list of Unit objects representing the cleaned listings
     """
+    logger = get_configured_logger('DEBUG', __name__)
     units = []
     attrs = set()
     for listing in listings:
         l = Listing(listing['content'], listing['_id'])
-        unit = l.clean()
-        units.append(unit)
-        attrs.update(l.getattrs())
+        
+        try:
+            unit = l.clean()
+            units.append(unit)
+            attrs.update(l.getattrs())
+        except Exception as e:
+            logger.info('Caught exception while cleaning.')
+            logger.info('Listing URL: {}'.format(listing['link']))
+            logger.info(e)
+            break
 
     return attrs, units
 
@@ -48,7 +56,7 @@ def writeattrstomongo(mongoclient, attrs):
     """
     attr_collection = mongoclient.scraper.attr
     for attr in attrs:
-        if not attr_collection.find_one({"attr": attr})
+        if not attr_collection.find_one({"attr": attr}):
             attr_collection.insert_one({"attr": attr})
 
 def writeunitstomongo(mongoclient, units):
@@ -59,7 +67,7 @@ def writeunitstomongo(mongoclient, units):
     """
     unit_collection = mongoclient.scraper.unit
     listing_collection = mongoclient.scraper.listing
-    for unit in units
+    for unit in units:
         unit_collection.insert_one(dict(unit))
         query = {"_id": unit['listing_id']}
         update = {"$set": {"content_parsed": True}}

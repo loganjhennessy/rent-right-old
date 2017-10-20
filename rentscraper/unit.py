@@ -41,14 +41,14 @@ class Unit(object):
             'listing_id': str(),
             'title': str()
         }
-        for attr in self._readattrs():
-            self.data[attr] = bool()
+#        for attr in self._readattrs():
+#            self.data[attr] = bool()
 
         if listing_id:
             self.data['listing_id'] = listing_id
 
-    def _readattrs(self):
-        return attrs
+#    def _readattrs(self):
+#        return attrs
 
     def __getitem__(self, item):
         return self.data[item]
