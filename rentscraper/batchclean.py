@@ -83,7 +83,7 @@ def removelistings(mongoclient, removed):
     listing_collection = mongoclient.scraper.listing
     count = len(removed)
     for i, listing in enumerate(removed):
-        logger.debug('  {} of {} removed from DB.'.format(i, count))
+        logger.debug('  {} of {} removed from DB.'.format(i + 1, count))
         query = {"_id": listing['clid']}
         listing_collection.delete_one(query)
 
