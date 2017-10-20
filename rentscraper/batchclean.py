@@ -26,9 +26,9 @@ def cleanlistings(listings):
             units.append(unit)
             attrs.update(l.getattrs())
         except Exception as e:
-            logger.info('Caught exception while cleaning.')
-            logger.info('Listing URL: {}'.format(listing['link']))
-            logger.info(e)
+            logger.warn('Caught exception while cleaning.')
+            logger.warn('Listing URL: {}'.format(listing['link']))
+            logger.warn(e)
             break
 
     return attrs, units
@@ -37,17 +37,23 @@ def findremoved(listings):
     """Get a list of the listings that have been removed.
 
     Arguments:
-        listings: list of listings
+        listings: pymongo cursor with listings to check.
 
     Returns:
         removed: list of listings that have been removed.
     """
     logger = get_configured_logger('DEBUG', __name__)
     removed = []
-    for listing in listings:
+    count = listings.count()
+    for i, listing in enumerate(listings):
         l = Listing(listing['content'], listing['_id'])
         if l.isremoved():
-            logger.info('List {} was removed, adding to list.'.format(l['link']))
+            logger.debug(
+                    'Listing {} of {} was removed by author.'.format(i, count)
+            )
+            logger.debug(
+                    'Adding {} to the removal list.'.format(listing['link'])
+            )
             removed.append(listing)
     return removed
 
@@ -75,7 +81,9 @@ def removelistings(mongoclient, removed):
     logger = get_configured_logger('DEBUG', __name__)
     logger.info('Removing {} listings.'.format(len(removed)))
     listing_collection = mongoclient.scraper.listing
-    for listing in removed:
+    count = len(removed)
+    for i, listing in enumerate(removed):
+        logger.debug('  {} of {} removed from DB.'.format(i, count))
         query = {"_id": listing['clid']}
         listing_collection.delete_one(query)
 
