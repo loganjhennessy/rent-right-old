@@ -29,7 +29,7 @@ class Listing(object):
 
     def clean(self):
         """Executes the cleaning of a listing."""
-        self._attributes()
+        self._attrgroups()
         self._description()
         self._location()
         self._imagemeta()
@@ -64,18 +64,29 @@ class Listing(object):
                 return True
 
         return False
-    
-    def _attributes(self):
+
+    def _attrgroups(self):
         """Parses all attributes with the 'attrgroup' class.
 
         This includes both the housing info (beds, baths, sqft) and the boolean
         attributes describing the unit (W/D in unit, etc).
         """
-        attrgrouptags = self.soup.select('.attrgroup')
-        housinginfo = attrgrouptags[0]
-        self._parsehousinginfo(housinginfo)
-        attrinfo = attrgrouptags[1]
-        self._parseattrinfo(attrinfo)
+        attrgroups = self.soup.findAll('p', {'class': 'attrgroup'})
+        for attrgroup in attrgroups:
+            bubbles = attrgroup.findAll('span', {'class': 'shared-line-bubbles'})
+            if bubbles:
+                for bubble in bubbles:
+                    if _isrooms(bubble):
+                        self._parserooms(bubble)
+                    elif _issqft(bubble):
+                        self._parsesqft(bubble)
+            else:
+                self._parseattrs(attrgroup)
+        #
+        # housinginfo = attrgrouptags[0]
+        # self._parsehousinginfo(housinginfo)
+        # attrinfo = attrgrouptags[1]
+        # self._parseattrinfo(attrinfo)
 
     def _description(self):
         """Parses the text contained in the listing description."""
@@ -129,7 +140,7 @@ class Listing(object):
         self.unit['latitude'] = maptag.attrs['data-latitude']
         self.unit['longitude'] = maptag.attrs['data-longitude']
 
-    def _parseattrinfo(self, attrinfo):
+    def _parseattrs(self, attrgroup):
         """Parses the boolean attributes about the listing.
 
         Sets a boolean attribute to true in self.unit for each attribute that is
@@ -138,34 +149,38 @@ class Listing(object):
         Arguments:
             attrinfo: BeautifulSoup tag containing attrs.
         """
-        attributes = attrinfo.findAll('span')
+        attributes = attrgroup.findAll('span')
         for attr in attributes:
             self.attrset.add(attr.text)
             self.unit[attr.text] = True
 
-    def _parsehousinginfo(self, housinginfo):
-        """Parses the housing attributes in the listing.
+    def _parserooms(self, bubble):
+        """Parses the room attributes in the listing.
 
         Sets 'bedrooms' and 'bathrooms' attributes of self.unit.
 
         Arguments:
-            housinginfo: BeautifulSoup tag with housing info.
+            bubble: BeautifulSoup tag with class 'shared-line-bubble'
         """
-        sharedlinebubbles = housinginfo.select('.shared-line-bubble')
+        isrooms = self._isrooms(bubble)
+        if isrooms == 'BRBa':
+            bedrooms, bathrooms = bubble.text.split(' / ')
+            self.unit['bedrooms'] = int(bedrooms.strip('BR'))
+            self.unit['bathrooms'] = float(bathrooms.strip('Ba'))
+        elif isrooms == 'BR':
+            self.unit['bedrooms'] = int(bubble.text.strip('BR'))
+        elif isrooms == 'Ba':
+            self.unit['bathrooms'] = float(bubble.text.strip('Ba'))
 
-        for bubble in sharedlinebubbles:
-            isrooms = self._isrooms(bubble)
-            if isrooms:
-                if isrooms == 'BRBa':
-                    bedrooms, bathrooms = bubble.text.split(' / ')
-                    self.unit['bedrooms'] = int(bedrooms.strip('BR'))
-                    self.unit['bathrooms'] = float(bathrooms.strip('Ba'))
-                elif isrooms == 'BR':
-                    self.unit['bedrooms'] = int(bubble.text.strip('BR'))
-                elif isrooms == 'Ba':
-                    self.unit['bathrooms'] = float(bubble.text.strip('Ba'))
-            elif self._issqft(bubble):
-                self.unit['sqft'] = int(bubble.text.strip('ft2'))
+    def _parsesqft(self, bubble):
+        """Parses the sqft attributes in the listing.
+
+        Sets 'sqft' attribute of self.unit.
+
+        Arguments:
+            bubble: BeautifulSoup tag with class 'shared-line-bubble'
+        """
+        self.unit['sqft'] = int(bubble.text.strip('ft2'))
 
     def _price(self):
         """Parses the price in the listing.
