@@ -42,10 +42,12 @@ def findremoved(listings):
     Returns:
         removed: list of listings that have been removed.
     """
+    logger = get_configured_logger('DEBUG', __name__)
     removed = []
     for listing in listings:
         l = Listing(listing['content'], listing['_id'])
         if l.isremoved():
+            logger.info('List {} was removed, adding to list.'.format(l['link']))
             removed.append(listing)
     return removed
 
@@ -70,6 +72,8 @@ def removelistings(mongoclient, removed):
         mongoclient: database client for the database containing the listings.
         remove: list of listing to remove
     """
+    logger = get_configured_logger('DEBUG', __name__)
+    logger.info('Removing {} listings.'.format(len(removed)))
     listing_collection = mongoclient.scraper.listing
     for listing in removed:
         query = {"_id": listing['clid']}
