@@ -52,10 +52,9 @@ class Listing(object):
         """
         removed_by_author_text = 'This posting has been deleted by its author.'
         expired_text = 'This posting has expired.'
-        removed_text_set = {removed_by_author_text, expired_text}
-        removed_by_author_tags = self.soup.findAll('div', {'class': 'removed'})
-        for tag in removed_by_author_tags:
-            if tag.text in removed_text_set:
+        removed_tags = self.soup.findAll('div', {'class': 'removed'})
+        for tag in removed_tags:
+            if removed_by_author_text in tag.text or expired_text in tag.text:
                 return True
 
         not_found_text = ('The post has expired, '
