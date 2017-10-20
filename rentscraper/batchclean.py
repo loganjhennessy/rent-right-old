@@ -21,7 +21,6 @@ def cleanlistings(listings):
     attrs = set()
     for listing in listings:
         l = Listing(listing['content'], listing['_id'])
-        
         try:
             unit = l.clean()
             units.append(unit)
@@ -33,6 +32,21 @@ def cleanlistings(listings):
             break
 
     return attrs, units
+
+def findremoved(listings):
+    """Get a list of the listings that have been removed.
+
+    Arguments:
+        listings: list of listings
+
+    Returns:
+        removed: list of listings that have been removed.
+    """
+    removed = []
+    for listing in listings:
+        if l.isremoved():
+            removed.append(listing)
+    return removed
 
 def queryforlistings(mongoclient):
     """Get all listings in the mongo database
@@ -47,6 +61,18 @@ def queryforlistings(mongoclient):
     query = {"content_parsed": False, "content_acquired": True}
     listings = listing_collection.find(query)
     return listings
+
+def removelistings(mongoclient, removed):
+    """Remove a list of listings from the database.
+
+    Arguments:
+        mongoclient: database client for the database containing the listings.
+        remove: list of listing to remove
+    """
+    listing_collection = mongoclient.scraper.listing
+    for listing in removed:
+        query = {"_id": listing['clid']}
+        listing_collection.delete_one(query)
 
 def writeattrstomongo(mongoclient, attrs):
     """Write a set of attributes to mongo database.
@@ -82,6 +108,12 @@ def main():
 
     listings = queryforlistings(mongoclient)
     logger.info('Found {} listings.'.format(listings.count()))
+
+    removed = findremoved(listings)
+    logger.info(
+        '{} listings have been removed, deleting from DB.'.format(len(removed))
+    )
+    removelistings(mongoclient, removed)
 
     attrs, units = cleanlistings(listings)
     logger.info('Observed {} unique attributes while cleanin.'.format(len(attrs)))
