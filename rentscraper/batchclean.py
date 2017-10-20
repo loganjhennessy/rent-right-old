@@ -85,7 +85,7 @@ def removelistings(mongoclient, removed):
     count = len(removed)
     for i, listing in enumerate(removed):
         logger.debug('  {} of {} removed from DB.'.format(i + 1, count))
-        query = {"_id": listing['clid']}
+        query = {"_id": listing['_id']}
         listing_collection.delete_one(query)
 
 def writeattrstomongo(mongoclient, attrs):
