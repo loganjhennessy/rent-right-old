@@ -45,15 +45,26 @@ class Listing(object):
         return self.attrset
 
     def isremoved(self):
-        """
-        """
-        removed_text = 'This posting has been deleted by its author.'
-        removed_tags = self.soup.findAll('div', {'class': 'removed'})
-        for tag in removed_tags:
-            if removed_text in tag.text:
-                return True
-        return False
+        """Indicates whether or not this post has been removed.
 
+        Returns:
+            bool: True if the post has been removed.
+        """
+        removed_by_author_text = 'This posting has been deleted by its author.'
+        removed_by_author_tags = self.soup.findAll('div', {'class': 'removed'})
+        for tag in removed_tags:
+            if removed_by_author_text in tag.text:
+                return True
+
+        not_found_text = 'The post has expired, '
+                         'or the post ID in the URL is invalid.'
+        not_found_tags = self.soup.findAll('div', {'class': 'post-not-found'})
+        for tag in not_found_tags:
+            if not_found_text in tag.text:
+                return True
+
+        return False
+    
     def _attributes(self):
         """Parses all attributes with the 'attrgroup' class.
 
