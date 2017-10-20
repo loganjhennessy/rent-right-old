@@ -16,7 +16,7 @@ class Unit(object):
 
         Numeric:
             bedrooms: int
-            bathrooms: int
+            bathrooms: float
             latitude: float
             longitude: float
             num_images: int
@@ -31,7 +31,7 @@ class Unit(object):
     def __init__(self, listing_id=None):
         self.data = {
             'bedrooms': int(),
-            'bathrooms': int(),
+            'bathrooms': float(),
             'latitude': float(),
             'longitude': float(),
             'num_images': int(),

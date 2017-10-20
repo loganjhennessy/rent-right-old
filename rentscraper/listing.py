@@ -1,5 +1,7 @@
 """rentscraper.listing"""
 
+from log import get_configured_logger
+
 from bs4 import BeautifulSoup
 from unit import Unit
 
@@ -21,6 +23,7 @@ class Listing(object):
         self.attrset = set()
         self.content = content
         self.listing_id = listing_id
+        self.logger = get_configured_logger('DEBUG', __name__)
         self.soup = BeautifulSoup(self.content, 'html.parser')
         self.unit = Unit(listing_id)
 
@@ -40,6 +43,16 @@ class Listing(object):
             attrset: set of attributes encountered in this listing
         """
         return self.attrset
+
+    def isremoved(self):
+        """
+        """
+        removed_text = 'This posting has been deleted by its author.'
+        removed_tags = self.soup.findAll('div', {'class': 'removed'})
+        for tag in removed_tags:
+            if removed_text in tag.text:
+                return True
+        return False
 
     def _attributes(self):
         """Parses all attributes with the 'attrgroup' class.
@@ -135,11 +148,11 @@ class Listing(object):
                 if isrooms == 'BRBa':
                     bedrooms, bathrooms = bubble.text.split(' / ')
                     self.unit['bedrooms'] = int(bedrooms.strip('BR'))
-                    self.unit['bathrooms'] = int(bedrooms.strip('Ba'))
+                    self.unit['bathrooms'] = float(bathrooms.strip('Ba'))
                 elif isrooms == 'BR':
                     self.unit['bedrooms'] = int(bubble.text.strip('BR'))
                 elif isrooms == 'Ba':
-                    self.unit['bathrooms'] = int(bubble.text.strip('Ba'))
+                    self.unit['bathrooms'] = float(bubble.text.strip('Ba'))
             elif self._issqft(bubble):
                 self.unit['sqft'] = int(bubble.text.strip('ft2'))
 

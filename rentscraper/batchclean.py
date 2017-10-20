@@ -44,6 +44,7 @@ def findremoved(listings):
     """
     removed = []
     for listing in listings:
+        l = Listing(listing['content'], listing['_id'])
         if l.isremoved():
             removed.append(listing)
     return removed
