@@ -50,7 +50,7 @@ def findremoved(listings):
         l = Listing(listing['content'], listing['_id'])
         if l.isremoved():
             logger.debug(
-                    'Listing {} of {} was removed by author.'.format(i, count)
+                    'Listing {} of {} not there anymore.'.format(i, count)
             )
             logger.debug(
                     'Adding {} to the removal list.'.format(listing['link'])
