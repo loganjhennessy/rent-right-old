@@ -19,6 +19,7 @@ def cleanlistings(listings):
     logger = get_configured_logger('DEBUG', __name__)
     units = []
     attrs = set()
+    logger.info('Cleaning {} listings.'.format(listings.count()))
     for listing in listings:
         l = Listing(listing['content'], listing['_id'])
         try:
