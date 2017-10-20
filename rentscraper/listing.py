@@ -64,8 +64,40 @@ class Listing(object):
         if self.soup.find('span', {'class': 'slider-info'}):
             imageinfostr = self.soup.select('.slider-info')[0].text
             num_images = imageinfostr.split()[-1]
-       
+
         self.unit['num_images'] = int(num_images)
+
+    def _isrooms(self, bubble):
+        """Determines whether or not a 'shared-line-bubble' tag contains rooms.
+
+        Arguments:
+            bubble: a bs4.Tag containing a 'shared-line-bubble' class
+
+        Returns:
+            str: 'BR', 'Ba', 'BRBa' or None (if tag does not contain rooms)
+        """
+        out = ''
+        if 'BR' in bubble.text:
+            out += 'BR'
+        if 'Ba' in bubble.text:
+            out += 'Ba'
+        if not out:
+            return None
+        else:
+            return out
+
+    def _issqft(self, bubble):
+        """Determines whether or not a 'shared-line-bubble' tag contains sqft.
+
+        Arguments:
+            bubble: a bs4.Tag containing a 'shared-line-bubble' class
+
+        Returns:
+            bool: True if tag contains sqft
+        """
+        if 'ft' in bubble.text:
+            return True
+        return False
 
     def _location(self):
         """Parses the location information from the listing content."""
@@ -96,10 +128,20 @@ class Listing(object):
             housinginfo: BeautifulSoup tag with housing info.
         """
         sharedlinebubbles = housinginfo.select('.shared-line-bubble')
-        rooms = sharedlinebubbles[0].text
-        bedrooms, bathrooms = rooms.split(' / ')
-        self.unit['bedrooms'] = bedrooms.strip('BR')
-        self.unit['bathrooms'] = bedrooms.strip('Ba')
+
+        for bubble in sharedlinebubbles:
+            isrooms = self._isrooms(bubble)
+            if isrooms:
+                if isrooms == 'BRBa':
+                    bedrooms, bathrooms = bubble.text.split(' / ')
+                    self.unit['bedrooms'] = int(bedrooms.strip('BR'))
+                    self.unit['bathrooms'] = int(bedrooms.strip('Ba'))
+                elif isrooms == 'BR':
+                    self.unit['bedrooms'] = int(bubble.text.strip('BR'))
+                elif isrooms == 'Ba':
+                    self.unit['bathrooms'] = int(bubble.text.strip('Ba'))
+            elif self._issqft(bubble):
+                self.unit['sqft'] = int(bubble.text.strip('ft2'))
 
     def _price(self):
         """Parses the price in the listing.
