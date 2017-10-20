@@ -113,7 +113,11 @@ def writeunitstomongo(mongoclient, units):
         update = {"$set": {"content_parsed": True}}
         listing_collection.update_one(query, update)
 
-def main():
+def main(argv):
+    remove = False
+    if argv[1] == 'remove':
+        remove = True
+
     """Main entry-point for batchclean."""
     logger = get_configured_logger('DEBUG', __name__)
 
@@ -123,11 +127,12 @@ def main():
     listings = queryforlistings(mongoclient)
     logger.info('Found {} listings.'.format(listings.count()))
 
-    removed = findremoved(listings)
-    logger.info(
-        '{} listings have been removed, deleting from DB.'.format(len(removed))
-    )
-    removelistings(mongoclient, removed)
+    if remove:
+        removed = findremoved(listings)
+        logger.info(
+            '{} listings have been removed, deleting from DB.'.format(len(removed))
+        )
+        removelistings(mongoclient, removed)
 
     listings = queryforlistings(mongoclient)
     attrs, units = cleanlistings(listings)
@@ -139,4 +144,4 @@ def main():
     writeattrstomongo(mongoclient, attrs)
 
 if __name__ == '__main__':
-    main()
+    main(sys.argv)
