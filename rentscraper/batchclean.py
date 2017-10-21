@@ -23,7 +23,7 @@ def cleanlistings(listings):
     logger.info('Cleaning {} listings.'.format(count))
     for i, listing in enumerate(listings):
         logger.info('Cleaning listing {} of {}.'.format(i, count))
-        l = Listing(listing['content'], listing['_id'])
+        l = Listing(listing['content'], listing['_id'], listing['zipcode'])
         try:
             unit = l.clean()
             units.append(unit)
