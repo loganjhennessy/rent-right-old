@@ -125,6 +125,14 @@ class Listing(object):
 
         self.unit['num_images'] = int(num_images)
 
+    def _isopenhouse(self, attrgroup):
+        """Determines whether or not an attrgroup tag contains open house."""
+        openhouse = attrgroup.text
+        if 'open house' in openhouse:
+            return True
+        else:
+            return False
+
     def _ispropertydate(self, attrgroup):
         """Determines whether or not an attrgroup tag contains availability."""
         prop_date = attrgroup.findAll('span', {'class': 'property_date'})
@@ -185,7 +193,10 @@ class Listing(object):
             attrinfo: BeautifulSoup tag containing attrs.
         """
         attributes = attrgroup.findAll('span')
-        if not self._isrooms(attrgroup) and not self._issqft(attrgroup):
+        if not self._isrooms(attrgroup) and \
+           not self._issqft(attrgroup) and \
+           not self._ispropertydate(attrgroup) and \
+           not self._isopenhouse(attrgroup):
             for attr in attributes:
                 self.attrset.add(attr.text)
                 self.unit[attr.text] = True
