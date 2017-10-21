@@ -123,6 +123,14 @@ class Listing(object):
 
         self.unit['num_images'] = int(num_images)
 
+    def _ispropertydate(self, attrgroup):
+        """Determines whether or not an attrgroup tag contains availability."""
+        prop_date = attrgroup.findAll('span', {'class': 'property_date'})
+        if prop_date:
+            return True
+        else:
+            return False
+
     def _isrooms(self, bubble):
         """Determines whether or not a 'shared-line-bubble' tag contains rooms.
 
