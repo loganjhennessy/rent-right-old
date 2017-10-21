@@ -175,9 +175,10 @@ class Listing(object):
             attrinfo: BeautifulSoup tag containing attrs.
         """
         attributes = attrgroup.findAll('span')
-        for attr in attributes:
-            self.attrset.add(attr.text)
-            self.unit[attr.text] = True
+        if not self._isrooms(attrgroup) and not self._issqft(attrgroup):
+            for attr in attributes:
+                self.attrset.add(attr.text)
+                self.unit[attr.text] = True
 
     def _parserooms(self, bubble):
         """Parses the room attributes in the listing.
