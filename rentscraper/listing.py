@@ -105,11 +105,6 @@ class Listing(object):
                         self._parsesqft(bubble)
             else:
                 self._parseattrs(attrgroup)
-        #
-        # housinginfo = attrgrouptags[0]
-        # self._parsehousinginfo(housinginfo)
-        # attrinfo = attrgrouptags[1]
-        # self._parseattrinfo(attrinfo)
 
     def _description(self):
         """Parses the text contained in the listing description."""
@@ -227,7 +222,7 @@ class Listing(object):
         Arguments:
             bubble: BeautifulSoup tag with class 'shared-line-bubble'
         """
-        self.unit['sqft'] = int(bubble.text.strip('ft2'))
+        self.unit['sqft'] = int(bubble.text.split('ft2', 1)[0])
 
     def _price(self):
         """Parses the price in the listing.
