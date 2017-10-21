@@ -18,14 +18,15 @@ class Listing(object):
         unit: Unit object for content
     """
 
-    def __init__(self, content, listing_id):
+    def __init__(self, content, listing_id, zipcode):
         """Inits a Listing with the raw HTML content."""
         self.attrset = set()
         self.content = content
         self.listing_id = listing_id
         self.logger = get_configured_logger('DEBUG', __name__)
         self.soup = BeautifulSoup(self.content, 'html.parser')
-        self.unit = Unit(listing_id)
+        self.unit = Unit(listing_id, zipcode)
+        self.zipcode = zipcode
 
     def clean(self):
         """Executes the cleaning of a listing."""

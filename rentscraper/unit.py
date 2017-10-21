@@ -27,28 +27,29 @@ class Unit(object):
             description: str
             listing_id: str
             title: str
+            zipcode: str
     """
-    def __init__(self, listing_id=None):
+    def __init__(self, listing_id=None, zipcode=None):
         self.data = {
             'bedrooms': int(),
             'bathrooms': float(),
             'latitude': float(),
+            'listing_id': str(),
             'longitude': float(),
             'num_images': int(),
             'price': float(),
             'sqft': int(),
             'description': str(),
             'listing_id': str(),
-            'title': str()
+            'title': str(),
+            'zipcode': str()
         }
-#        for attr in self._readattrs():
-#            self.data[attr] = bool()
 
         if listing_id:
             self.data['listing_id'] = listing_id
 
-#    def _readattrs(self):
-#        return attrs
+        if zipcode:
+            self.data['zipcode'] = zipcode
 
     def __getitem__(self, item):
         return self.data[item]
