@@ -114,11 +114,11 @@ def writeunitstomongo(mongoclient, units):
         listing_collection.update_one(query, update)
 
 def main(argv):
+    """Main entry-point for batchclean."""
     remove = False
     if argv[1] == 'remove':
         remove = True
 
-    """Main entry-point for batchclean."""
     logger = get_configured_logger('DEBUG', __name__)
 
     mongoclient = MongoClient('localhost', 27017)
@@ -137,7 +137,7 @@ def main(argv):
     listings = queryforlistings(mongoclient)
     attrs, units = cleanlistings(listings)
     logger.info(
-        'Observed {} unique attributes while cleanin.'.format(len(attrs))
+        'Observed {} unique attributes while cleaning.'.format(len(attrs))
     )
     logger.info('Processed {} units'.format(len(units)))
     writeunitstomongo(mongoclient, units)

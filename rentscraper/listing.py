@@ -54,6 +54,10 @@ class Listing(object):
         expired_text = 'This posting has expired.'
         flagged_text = 'This posting has been flagged for removal.'
         removed_tags = self.soup.findAll('div', {'class': 'removed'})
+
+        if not self.content:
+            return True
+
         for tag in removed_tags:
             if removed_by_author_text in tag.text or
                expired_text in tag.text or
@@ -80,6 +84,7 @@ class Listing(object):
             bubbles = attrgroup.findAll('span', {'class': 'shared-line-bubbles'})
             if bubbles:
                 for bubble in bubbles:
+                    self.logger.debug(bubble)
                     if _isrooms(bubble):
                         self._parserooms(bubble)
                     elif _issqft(bubble):
