@@ -95,7 +95,7 @@ class Listing(object):
         """
         attrgroups = self.soup.findAll('p', {'class': 'attrgroup'})
         for attrgroup in attrgroups:
-            bubbles = attrgroup.findAll('span', {'class': 'shared-line-bubbles'})
+            bubbles = attrgroup.findAll('span', {'class': 'shared-line-bubble'})
             if bubbles:
                 for bubble in bubbles:
                     self.logger.debug(bubble)
