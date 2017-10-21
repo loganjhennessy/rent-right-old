@@ -158,8 +158,12 @@ class Listing(object):
     def _location(self):
         """Parses the location information from the listing content."""
         maptag = self.soup.find('div', {'id': 'map'})
-        self.unit['latitude'] = maptag.attrs['data-latitude']
-        self.unit['longitude'] = maptag.attrs['data-longitude']
+        if maptag:
+            self.unit['latitude'] = maptag.attrs['data-latitude']
+            self.unit['longitude'] = maptag.attrs['data-longitude']
+        else:
+            self.unit['latitude'] = None
+            self.unit['longitude'] = None
 
     def _parseattrs(self, attrgroup):
         """Parses the boolean attributes about the listing.

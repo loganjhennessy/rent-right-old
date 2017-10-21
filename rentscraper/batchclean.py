@@ -27,6 +27,7 @@ def cleanlistings(listings):
         try:
             unit = l.clean()
             units.append(unit)
+            logger.debug('Attributes: {}'.format(l.getattrs()))
             attrs.update(l.getattrs())
         except Exception as e:
             logger.warn('Caught exception while cleaning.')
