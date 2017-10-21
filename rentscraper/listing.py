@@ -44,6 +44,18 @@ class Listing(object):
         """
         return self.attrset
 
+
+    def hasprice(self):
+        """Checks whether or not the listing has a price.
+
+        Returns:
+            bool: True if there is a price class in the content.
+        """
+        if self.soup.find('span', {'class': 'price'}):
+            return True
+        else:
+            return False
+
     def isremoved(self):
         """Indicates whether or not this post has been removed.
 

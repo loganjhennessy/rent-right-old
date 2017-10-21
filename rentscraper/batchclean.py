@@ -56,6 +56,8 @@ def findremoved(listings):
                     'Adding {} to the removal list.'.format(listing['link'])
             )
             removed.append(listing)
+        if not l.hasprice():
+            removed.append(listing)
     return removed
 
 def queryforlistings(mongoclient):
