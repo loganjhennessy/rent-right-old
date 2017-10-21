@@ -99,9 +99,9 @@ class Listing(object):
             if bubbles:
                 for bubble in bubbles:
                     self.logger.debug(bubble)
-                    if _isrooms(bubble):
+                    if self._isrooms(bubble):
                         self._parserooms(bubble)
-                    elif _issqft(bubble):
+                    elif self._issqft(bubble):
                         self._parsesqft(bubble)
             else:
                 self._parseattrs(attrgroup)
@@ -208,7 +208,10 @@ class Listing(object):
         if isrooms == 'BRBa':
             bedrooms, bathrooms = bubble.text.split(' / ')
             self.unit['bedrooms'] = int(bedrooms.strip('BR'))
-            self.unit['bathrooms'] = float(bathrooms.strip('Ba'))
+            try:
+                self.unit['bathrooms'] = float(bathrooms.strip('Ba'))
+            except Exception as e:
+                self.logger.warn('Could not parse bathrooms.')
         elif isrooms == 'BR':
             self.unit['bedrooms'] = int(bubble.text.strip('BR'))
         elif isrooms == 'Ba':
