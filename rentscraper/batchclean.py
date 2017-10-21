@@ -19,8 +19,10 @@ def cleanlistings(listings):
     logger = get_configured_logger('DEBUG', __name__)
     units = []
     attrs = set()
-    logger.info('Cleaning {} listings.'.format(listings.count()))
-    for listing in listings:
+    count = listings.count()
+    logger.info('Cleaning {} listings.'.format(count))
+    for i, listing in enumerate(listings):
+        logger.info('Cleaning listing {} of {}.'.format(i, count))
         l = Listing(listing['content'], listing['_id'])
         try:
             unit = l.clean()
@@ -47,6 +49,7 @@ def findremoved(listings):
     removed = []
     count = listings.count()
     for i, listing in enumerate(listings):
+        logger.debug('Checking listing {} of {}.'.format(i, count))
         l = Listing(listing['content'], listing['_id'])
         if l.isremoved():
             logger.debug(
