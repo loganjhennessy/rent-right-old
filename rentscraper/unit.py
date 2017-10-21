@@ -53,7 +53,7 @@ class Unit(object):
     def __getitem__(self, item):
         return self.data[item]
 
-    def __iter__(self, item):
+    def __iter__(self):
         for key, val in  self.data.items():
             yield key, val
 

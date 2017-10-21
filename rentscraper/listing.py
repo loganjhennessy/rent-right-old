@@ -35,7 +35,7 @@ class Listing(object):
         self._imagemeta()
         self._price()
         self._title()
-        return self.unit()
+        return self.unit
 
     def getattrs(self):
         """Returns the set of attributes encountered in this listing.
