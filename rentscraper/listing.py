@@ -59,8 +59,8 @@ class Listing(object):
             return True
 
         for tag in removed_tags:
-            if removed_by_author_text in tag.text or
-               expired_text in tag.text or
+            if removed_by_author_text in tag.text or \
+               expired_text in tag.text or \
                flagged_text in tag.text:
                 return True
 
