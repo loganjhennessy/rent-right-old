@@ -11,5 +11,10 @@ setup(
         'rentright.scrubber', 
         'rentright.utils',
     ],
+    install_requies=[
+        'bs4',
+        'fake_useragent',
+        'pymongo',
+    ],
     url='https://github.com/loganjhennessy/rent-right'
 )
