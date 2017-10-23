@@ -1,5 +1,6 @@
-# Jupyter notebook checkpoints
+# Jupyter notebook
 .ipynb_checkpoints
+*.ipynb
 
 # Exclude local directories
 logs/
