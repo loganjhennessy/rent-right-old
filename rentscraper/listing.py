@@ -108,7 +108,9 @@ class Listing(object):
 
     def _description(self):
         """Parses the text contained in the listing description."""
-        description = self.soup.find('section', {'id': 'postingbody'}).text
+        postingbody = self.soup.find('section', {'id': 'postingbody'})
+        text = postingbody.findAll(text=True)
+        description = ' '.join(text).replace('\n', ' ')
         self.unit['description'] = description
 
     def _imagemeta(self):

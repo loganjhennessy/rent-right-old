@@ -1,4 +1,5 @@
 """rentscraper.scraper"""
+import os
 import sys
 
 from log import get_configured_logger
@@ -79,7 +80,11 @@ def main(argv):
 
     zipcodes = get_zips(city, state)
 
-    mongoclient = MongoClient('localhost', 27017)
+    MONGO_USER = os.environ['MONGO_USER']
+    MONGO_PASS = os.environ['MONGO_PASS']
+    MONGO_IP = os.environ['MONGO_IP']
+    connstr = 'mongodb://{}:{}@{}/scraper'
+    mongoclient = MongoClient(connstr.format(MONGO_USER, MONGO_PASS, MONGO_IP))
 
     if run_option == 'search' or run_option == 'both':
         run_search(city, zipcodes, mongoclient)
