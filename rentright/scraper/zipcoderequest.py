@@ -1,8 +1,8 @@
-"""rentscraper.zipcoderequest"""
+"""rentright.scraper.zipcoderequest"""
 import os
 import requests
 
-from log import get_configured_logger
+from rentright.utils.log import get_configured_logger
 
 class ZipCodeRequest(object):
     """Allows for encapsulated configuration and use of Zip Code API.
@@ -48,7 +48,7 @@ class ZipCodeRequest(object):
             self.city,
             self.state
         )
-        
+
         try:
             resp = requests.get(url)
         except Exception as e:

@@ -1,3 +1,4 @@
+"""rentright.bin.resetclean"""
 from pymongo import MongoClient
 
 def main():

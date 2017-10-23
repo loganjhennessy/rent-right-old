@@ -1,4 +1,4 @@
-"""rentscraper.unit"""
+"""rentright.scrubber.unit"""
 
 class Unit(object):
     """Implements a class to represent a single Unit.

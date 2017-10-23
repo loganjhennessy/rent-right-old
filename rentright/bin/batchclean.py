@@ -1,10 +1,10 @@
-"""rentscraper.batchclean"""
+"""rentright.bin.batchclean"""
 import sys
 
-from log import get_configured_logger
 from pymongo import MongoClient
 
-from listing import Listing
+from rentright.scraper import Listing
+from rentright.utils.log import get_configured_logger
 
 def cleanlistings(listings):
     """Clean a list of listings and return a clean unit object.
