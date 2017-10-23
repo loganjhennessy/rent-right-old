@@ -128,6 +128,13 @@ class Listing(object):
         else:
             return False
 
+    def __isotherposting(self, attrgroup):
+        """ """
+        otherpostings = attrgroup.findAll('span', {'class': 'otherpostings'})
+        if otherpostings:
+            return True
+        return False
+
     def _ispropertydate(self, attrgroup):
         """Determines whether or not an attrgroup tag contains availability."""
         prop_date = attrgroup.findAll('span', {'class': 'property_date'})
@@ -191,7 +198,8 @@ class Listing(object):
         if not self._isrooms(attrgroup) and \
            not self._issqft(attrgroup) and \
            not self._ispropertydate(attrgroup) and \
-           not self._isopenhouse(attrgroup):
+           not self._isopenhouse(attrgroup) and \
+           not self._isotherposting(attrgroup):
             for attr in attributes:
                 self.attrset.add(attr.text)
                 self.unit[attr.text] = True
