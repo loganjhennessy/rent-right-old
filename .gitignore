@@ -9,3 +9,6 @@ scratch/
 # Python generated files
 __pycache__
 *.pyc
+
+# VIM Generated Files
+*.swp
