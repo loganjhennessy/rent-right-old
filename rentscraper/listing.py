@@ -129,7 +129,7 @@ class Listing(object):
             return False
 
     def __isotherposting(self, attrgroup):
-        """ """
+        """Detemine whether or not an attrgroup tag contains 'otherposting'."""
         otherpostings = attrgroup.findAll('span', {'class': 'otherpostings'})
         if otherpostings:
             return True
