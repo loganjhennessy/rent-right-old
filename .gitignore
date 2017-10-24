@@ -4,6 +4,7 @@
 
 # Exclude local directories
 logs/
+rerendered/
 scratch/
 
 # Python generated files
