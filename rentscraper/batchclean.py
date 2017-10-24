@@ -1,4 +1,5 @@
 """rentscraper.batchclean"""
+import os
 import sys
 
 from log import get_configured_logger
