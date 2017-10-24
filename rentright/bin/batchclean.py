@@ -121,7 +121,7 @@ def writeunitstomongo(mongoclient, units):
 def main(argv):
     """Main entry-point for batchclean."""
     remove = False
-    if argv[1] == 'remove':
+    if len(argv) > 1 and argv[1] == 'remove':
         remove = True
 
     logger = get_configured_logger('DEBUG', __name__)
