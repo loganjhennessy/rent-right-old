@@ -1,12 +1,8 @@
 """rentright.bin.resetclean"""
-from pymongo import MongoClient
+from rentright.utils.mongo import get_mongoclient
 
 def main():
-    MONGO_USER = os.environ['MONGO_USER']
-    MONGO_PASS = os.environ['MONGO_PASS']
-    MONGO_IP = os.environ['MONGO_IP']
-    connstr = 'mongodb://{}:{}@{}/scraper'
-    mongoclient = MongoClient(connstr.format(MONGO_USER, MONGO_PASS, MONGO_IP))
+    mongoclient = get_mongoclient()
 	listing_collection = client.scraper.listing
     listings = listing_collection.find()
     for listing in listings:
