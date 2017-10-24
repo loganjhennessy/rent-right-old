@@ -1,9 +1,8 @@
-"""rentscraper.listing"""
-
-from log import get_configured_logger
-
+"""rentright.scrubber.listing"""
 from bs4 import BeautifulSoup
-from unit import Unit
+
+from rentright.scrub.unit import Unit
+from rentright.utils.log import get_configured_logger
 
 class Listing(object):
     """Implements a Listing.

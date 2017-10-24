@@ -1,4 +1,4 @@
-"""rentscraper.contentscraper"""
+"""rentright.scraper.contentscraper"""
 import datetime
 import os
 import requests
@@ -6,9 +6,10 @@ import time
 
 from fake_useragent import UserAgent
 from bs4 import BeautifulSoup
-from log import get_configured_logger
 from requests.exceptions import ProxyError, SSLError
 from requests.packages.urllib3.exceptions import MaxRetryError
+
+from rentright.utils.log import get_configured_logger
 
 class ContentScraper(object):
     """Implements a content scrape for a list of listings.

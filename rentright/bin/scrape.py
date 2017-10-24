@@ -1,13 +1,12 @@
-"""rentscraper.scraper"""
+"""rentright.bin.scraper"""
 import os
 import sys
 
-from log import get_configured_logger
-from pymongo import MongoClient
-
-from contentscraper import ContentScraper
-from zipcoderequest import ZipCodeRequest
-from zipcodesearch import ZipCodeSearch
+from rentright.scrape.contentscraper import ContentScraper
+from rentright.scrape.zipcoderequest import ZipCodeRequest
+from rentright.scrape.zipcodesearch import ZipCodeSearch
+from rentright.utils.log import get_configured_logger
+from rentright.utils.mongo import get_mongoclient
 
 def get_zips(city, state):
     """Get zip codes for the input city and state.
@@ -79,12 +78,7 @@ def main(argv):
     run_option = argv[3]
 
     zipcodes = get_zips(city, state)
-
-    MONGO_USER = os.environ['MONGO_USER']
-    MONGO_PASS = os.environ['MONGO_PASS']
-    MONGO_IP = os.environ['MONGO_IP']
-    connstr = 'mongodb://{}:{}@{}/scraper'
-    mongoclient = MongoClient(connstr.format(MONGO_USER, MONGO_PASS, MONGO_IP))
+    mongoclient = get_mongoclient()
 
     if run_option == 'search' or run_option == 'both':
         run_search(city, zipcodes, mongoclient)

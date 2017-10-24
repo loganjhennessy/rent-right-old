@@ -1,21 +1,18 @@
-# Rent Scraper
+> **Note:** This application is a work-in-progress. Development began on
+> Monday, September 18th, 2017.
 
-Scrapes rental apartment and housing data with Python and stores in
-MongoDB.
+# Rent Right
 
-This project was established to provide data for the [Rent Right](https://github.com/loganjhennessy/rent-right) project. Please
-follow the link for more details.
+What hidden features make a rental listing over or under the expected value?
 
 # Motivation
 
-The need for a scraper that was separate from the Rent Right application
-was evident early on in the project's development. Thus was born a
-general purpose scraper for apartment data.
-
-Scalability is the primary reason for this separation of concerns. If
-the Rent Right application is ever to be expanded to different cities,
-neighborhoods, or even data sources, the underlying web scraper must be
-flexible enough to accommodate such changes with minimal re-factoring.
+Through my own experience as a renter, I have found that I have developed
+somewhat of a 6th sense for the value of a property given the contents of it's
+advertisement. Things like image quality, text write-up, location, and various
+other features can indicate weather a property is over or under-priced. At
+present, this assessment is completely subjective and done in my head. This
+project is an attempt to codify that assessment.
 
 # Setup
 
