@@ -6,7 +6,8 @@ loggers = {}
 
 def get_configured_logger(level, name):
 
-    dir_path = dir_path = os.path.dirname(os.path.realpath(__file__))
+    home_dir = os.environ['HOME']
+    dir_path = home_dir + '/rent-right'
     logfile = dir_path + '/logs/' + name + '.log'
 
     if loggers.get(name):
