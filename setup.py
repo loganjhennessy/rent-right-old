@@ -5,10 +5,10 @@ setup(
     author_email='loganjhennessy@gmail.com',
     packages=[
         'rentright',
-        'rentright.bin', 
-        'rentright.model', 
-        'rentright.scraper', 
-        'rentright.scrubber', 
+        'rentright.bin',
+        'rentright.model',
+        'rentright.scrape',
+        'rentright.scrub', 
         'rentright.utils',
     ],
     install_requies=[

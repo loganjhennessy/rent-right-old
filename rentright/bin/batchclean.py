@@ -1,7 +1,7 @@
 """rentright.bin.batchclean"""
 import sys
 
-from rentright.scraper import Listing
+from rentright.scrub import Listing
 from rentright.utils.log import get_configured_logger
 from rentright.utils.mongo import get_mongoclient
 

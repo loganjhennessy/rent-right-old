@@ -1,7 +1,7 @@
 """rentright.scrubber.listing"""
 from bs4 import BeautifulSoup
 
-from rentright.scrubber.unit import Unit
+from rentright.scrub.unit import Unit
 from rentright.utils.log import get_configured_logger
 
 class Listing(object):

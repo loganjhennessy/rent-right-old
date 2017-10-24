@@ -2,9 +2,9 @@
 import os
 import sys
 
-from rentright.scraper.contentscraper import ContentScraper
-from rentright.scraper.zipcoderequest import ZipCodeRequest
-from rentright.scraper.zipcodesearch import ZipCodeSearch
+from rentright.scrape.contentscraper import ContentScraper
+from rentright.scrape.zipcoderequest import ZipCodeRequest
+from rentright.scrape.zipcodesearch import ZipCodeSearch
 from rentright.utils.log import get_configured_logger
 from rentright.utils.mongo import get_mongoclient
 
