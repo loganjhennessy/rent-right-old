@@ -1,10 +1,9 @@
-"""rentscraper.batchclean"""
+"""rentright.bin.batchclean"""
 import sys
 
-from log import get_configured_logger
-from pymongo import MongoClient
-
-from listing import Listing
+from rentright.scrub import Listing
+from rentright.utils.log import get_configured_logger
+from rentright.utils.mongo import get_mongoclient
 
 def cleanlistings(listings):
     """Clean a list of listings and return a clean unit object.
@@ -122,12 +121,12 @@ def writeunitstomongo(mongoclient, units):
 def main(argv):
     """Main entry-point for batchclean."""
     remove = False
-    if argv[1] == 'remove':
+    if len(argv) > 1 and argv[1] == 'remove':
         remove = True
 
     logger = get_configured_logger('DEBUG', __name__)
 
-    mongoclient = MongoClient('localhost', 27017)
+    mongoclient = get_mongoclient()
     logger.info('Retrieved mongoclient.')
 
     listings = queryforlistings(mongoclient)

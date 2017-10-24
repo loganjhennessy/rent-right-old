@@ -1,3 +1,4 @@
+"""rentright.utils.log"""
 import logging
 import os
 
@@ -14,7 +15,7 @@ def get_configured_logger(level, name):
     else:
         logger = logging.getLogger(name)
         logger.setLevel(getattr(logging,level))
-        
+
         if not logger.handlers:
             ch = logging.StreamHandler()
             ch.setLevel(getattr(logging,level))

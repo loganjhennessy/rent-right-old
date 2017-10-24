@@ -1,4 +1,4 @@
-"""rentscraper.zipcodesearch"""
+"""rentright.scraper.zipcodesearch"""
 import datetime
 import os
 import requests
@@ -6,7 +6,8 @@ import time
 
 from bs4 import BeautifulSoup
 from fake_useragent import UserAgent
-from log import get_configured_logger
+
+from rentright.utils.log import get_configured_logger
 
 class ZipCodeSearch(object):
     """Implements a search for all rental listings by zip code.

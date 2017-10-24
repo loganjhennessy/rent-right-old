@@ -1,4 +1,4 @@
-"""rentscraper.contentscraper"""
+"""rentright.scraper.contentscraper"""
 import datetime
 import os
 import requests
@@ -6,9 +6,10 @@ import time
 
 from fake_useragent import UserAgent
 from bs4 import BeautifulSoup
-from log import get_configured_logger
 from requests.exceptions import ProxyError, SSLError
 from requests.packages.urllib3.exceptions import MaxRetryError
+
+from rentright.utils.log import get_configured_logger
 
 class ContentScraper(object):
     """Implements a content scrape for a list of listings.
@@ -158,6 +159,10 @@ if __name__ == '__main__':
     import sys
 
     from pymongo import MongoClient
-    mongoclient = MongoClient('localhost', 27017)
+    MONGO_USER = os.environ['MONGO_USER']
+    MONGO_PASS = os.environ['MONGO_PASS']
+    MONGO_IP = os.environ['MONGO_IP']
+    connstr = 'mongodb://{}:{}@{}/scraper'
+    mongoclient = MongoClient(connstr.format(MONGO_USER, MONGO_PASS, MONGO_IP))
     listingscraper = ListingScraper(sys.argv[1], mongoclient)
     listingscraper.execute()

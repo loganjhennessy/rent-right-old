@@ -1,9 +1,8 @@
-"""rentscraper.listing"""
-
-from log import get_configured_logger
-
+"""rentright.scrubber.listing"""
 from bs4 import BeautifulSoup
-from unit import Unit
+
+from rentright.scrub.unit import Unit
+from rentright.utils.log import get_configured_logger
 
 class Listing(object):
     """Implements a Listing.
@@ -108,7 +107,9 @@ class Listing(object):
 
     def _description(self):
         """Parses the text contained in the listing description."""
-        description = self.soup.find('section', {'id': 'postingbody'}).text
+        postingbody = self.soup.find('section', {'id': 'postingbody'})
+        text = postingbody.findAll(text=True)
+        description = ' '.join(text).replace('\n', ' ')
         self.unit['description'] = description
 
     def _imagemeta(self):
