@@ -33,7 +33,7 @@ class ContentScraper(object):
         self.logger = get_configured_logger('DEBUG', __name__)
         self.mongoclient = mongoclient
         self.proxy = os.environ['HTTP_PROXY']
-        self.sleeplong = 5
+        self.sleeplong = 2
         self.sleepshort = 0.5
         self.ua = UserAgent()
         self.zipcode = zipcode
@@ -53,7 +53,7 @@ class ContentScraper(object):
         total_listings = listings.count()
 
         for i, listing in enumerate(listings):
-            time.sleep(self.sleepshort)
+            #time.sleep(self.sleepshort)
             url = listing['link']
             self.logger.info('Scraping details for: {}'.format(url))
             content = self._scrape_details(url)
