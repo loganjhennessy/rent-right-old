@@ -3,7 +3,7 @@ from rentright.utils.mongo import get_mongoclient
 
 def main():
     mongoclient = get_mongoclient()
-	listing_collection = client.scraper.listing
+    listing_collection = mongoclient.scraper.listing
     listings = listing_collection.find()
     for listing in listings:
         query = {'_id': listing['_id']}
