@@ -8,6 +8,9 @@ logs/
 rerendered/
 scratch/
 
+# Pycharm files
+.idea
+
 # Python generated files
 __pycache__
 *.pyc
