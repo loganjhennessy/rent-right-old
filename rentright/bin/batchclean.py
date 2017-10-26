@@ -1,7 +1,7 @@
 """rentright.bin.batchclean"""
 import sys
 
-from rentright.scrub import Listing
+from rentright.scrub.listing import Listing
 from rentright.utils.log import get_configured_logger
 from rentright.utils.mongo import get_mongoclient
 
@@ -50,7 +50,7 @@ def findremoved(listings):
     count = listings.count()
     for i, listing in enumerate(listings):
         logger.debug('Checking listing {} of {}.'.format(i, count))
-        l = Listing(listing['content'], listing['_id'])
+        l = Listing(listing['content'], listing['_id'], listing['zipcode'])
         if l.isremoved():
             logger.debug(
                     'Listing {} of {} not there anymore.'.format(i, count)
@@ -74,7 +74,7 @@ def queryforlistings(mongoclient):
     """
     listing_collection = mongoclient.scraper.listing
     query = {"content_parsed": False, "content_acquired": True}
-    listings = listing_collection.find(query)
+    listings = listing_collection.find(query, no_cursor_timeout=True)
     return listings
 
 def removelistings(mongoclient, removed):

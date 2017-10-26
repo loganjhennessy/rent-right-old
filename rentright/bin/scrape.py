@@ -26,6 +26,16 @@ def get_zips(city, state):
     zipcodes = zipcoderequest.execute()
     return zipcodes
 
+def run_both(city, zipcodes, mongoclient):
+    logger = get_configured_logger('DEBUG', __name__)
+    for zipcode in zipcodes:
+        zipcodesearch = ZipCodeSearch(city, zipcode, mongoclient)
+        zipcodesearch.execute()
+        logger.info('Compiled listings for zip code {}'.format(zipcode))
+        contentscraper = ContentScraper(zipcode, mongoclient)
+        contentscraper.execute()
+        logger.info('Gathered listings for zip code {}'.format(zipcode))
+
 def run_search(city, zipcodes, mongoclient):
     """Run a search for listings in a specific zip code and write to mongoDB.
 
@@ -80,11 +90,14 @@ def main(argv):
     zipcodes = get_zips(city, state)
     mongoclient = get_mongoclient()
 
-    if run_option == 'search' or run_option == 'both':
+    if run_option == 'search':
         run_search(city, zipcodes, mongoclient)
 
-    if run_option == 'scrape' or run_option == 'both':
+    if run_option == 'scrape':
         scrape_content(zipcodes, mongoclient)
+
+    if run_option == 'both':
+        run_both(city, zipcodes, mongoclient)
 
 if __name__ == '__main__':
     main(sys.argv)

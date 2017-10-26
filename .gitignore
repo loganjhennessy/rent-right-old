@@ -3,6 +3,7 @@
 *.ipynb
 
 # Exclude local directories
+build/
 logs/
 rerendered/
 scratch/

@@ -36,7 +36,7 @@ class ZipCodeSearch(object):
         self.logger = get_configured_logger('DEBUG', __name__)
         self.mongoclient = mongoclient
         self.proxy = os.environ['HTTP_PROXY']
-        self.sleeplong = 5
+        self.sleeplong = 2
         self.sleepshort = 0.5
         self.ua = UserAgent()
         self.zipcode = zipcode
@@ -62,7 +62,7 @@ class ZipCodeSearch(object):
             self._writelistingstomongo(listings)
 
         for s in range(120, int(count), 120):
-            time.sleep(self.sleepshort)
+            #time.sleep(self.sleepshort)
             content = self._search(str(s))
             listings = self._parseresults(content, str(s))
             self._writelistingstomongo(listings)
