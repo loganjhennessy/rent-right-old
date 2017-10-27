@@ -141,6 +141,19 @@ Features
 
 Need to build actual python modules.
 
+- Code organization
+  - Need a script that will...
+  - Get a `mongoclient`
+  - Get all the units
+  - Get X and y from units
+  - Instantiate an estimator
+  - Run estimator through cross-val with X and y
+  - Print results, including number of records
+
+- Need a step where the text processing is done
+- Need to get the zip code count into an easy-to-call method
+
+
 - Add text stats to the units collection
 - Dig out specific features that aren't structured attributes
 - Find features that *are* in the structured attributes
@@ -149,4 +162,6 @@ Add features one at a time and see what the effect is.
 
 - Build an MVP website that takes a Craigslist link and runs it through the
 model
-- Don't need to add a ton of features
+- Don't need to add a ton of features. I can actually just use what I have not.
+
+I'd like to try a Pipeline as well to fine-tune the model a bit.
