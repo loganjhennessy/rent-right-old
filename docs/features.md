@@ -96,7 +96,7 @@ Features
 
 > Brainstorming
 
-#### Description data data:
+#### Description meta data:
 
 - `flesch_reading_ease` - 0-100 scale for readability
 - `smog_index`
@@ -108,6 +108,7 @@ Features
 - `linsear_write_formula`
 - `gunning_fog`
 - `text_standard` - grade level range
+- Length of the description
 
 #### Extracted (extra) features from description:
 
@@ -136,8 +137,16 @@ Features
   - Augment with 'studio'
 - Parking type
 
-### Additional external data
+### Next steps
 
-- Walk Score from their API
+Need to build actual python modules.
 
+- Add text stats to the units collection
+- Dig out specific features that aren't structured attributes
+- Find features that *are* in the structured attributes
 
+Add features one at a time and see what the effect is.
+
+- Build an MVP website that takes a Craigslist link and runs it through the
+model
+- Don't need to add a ton of features
