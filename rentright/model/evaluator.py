@@ -23,7 +23,7 @@ class Evaluator(object):
                 scoring='neg_mean_absolute_error'
             )
         ))
-        self.r2 = list(cross_val_score(self.model, self.X, self.y))
+        self.r2 = list(cross_val_score(self.model, self.X, self.y, cv=5))
 
     def results(self):
         headers = ['Run', 'Error', 'R<sup>2</sup>']
@@ -31,9 +31,9 @@ class Evaluator(object):
         align = '|:-:|--:|--:|'
         rows = ['|{}|{:6.2f}|{:6.2f}|'.format(
             i + 1,
-            self.error,
-            self.r2
-        ) for i, (self.error, self.r2) in enumerate(zip(self.error, self.r2))]
+            error_,
+            r2_
+        ) for i, (error_, r2_) in enumerate(zip(self.error, self.r2))]
         rows = '\n'.join(rows)
         mean = '|Mean|{:6.2f}|{:6.2f}|'.format(
             np.mean(self.error), np.mean(self.r2))
