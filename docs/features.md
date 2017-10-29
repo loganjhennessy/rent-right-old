@@ -149,14 +149,18 @@ Need to build actual python modules.
   - Instantiate an estimator
   - Run estimator through cross-val with X and y
   - Print results, including number of records
-
-- Need a step where the text processing is done
-- Need to get the zip code count into an easy-to-call method
+  - Need a step where the text processing is done
+  - Need to get the zip code count into an easy-to-call method
 
 
 - Add text stats to the units collection
 - Dig out specific features that aren't structured attributes
 - Find features that *are* in the structured attributes
+
+Need to eliminate numbers from the descriptions. This is just throwing things
+off. Also need to filter out weird punctuation and random symbols.
+
+At what point in the pipeline do I insert something that will do these things?
 
 Add features one at a time and see what the effect is.
 
