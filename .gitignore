@@ -1,6 +1,5 @@
 # Jupyter notebook
 .ipynb_checkpoints
-*.ipynb
 
 # Exclude local directories
 build/
