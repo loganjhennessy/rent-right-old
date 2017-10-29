@@ -19,10 +19,11 @@ class Preprocessor(object):
         self.zipcode = zipcode
 
     def getfeatures(self):
-        if self.df == None:
-            excludelist = ['_id', 'description', 'listing_id', 'price', 'title']
-            features = list(set(self.df.columns) - set(excludelist))
-            self.makedataframe()
+        self._applyfilters()
+        self._makedataframe()
+        self._makefeatures()
+        excludelist = ['_id', 'description', 'listing_id', 'price', 'title']
+        features = list(set(self.df.columns) - set(excludelist))
 
         X = self.df[features]
         return X
@@ -31,20 +32,31 @@ class Preprocessor(object):
         y = self.df['price']
         return y
 
-    def makedataframe(self):
+    def _applyfilters(self):
+        self.df = self.df[
+            (self.df['price'] < self.maxprice) &
+            (self.df['sqft'] != 0) &
+            (self.df['sqft'] < self.maxsqft)
+        ]
+        if self.zipcode:
+            self.df = self.df[self.df['zipcode'] == self.zipcode]
+
+    def _makedataframe(self):
         df = pd.DataFrame(list(self.units))
         df.fillna(False, inplace=True)
-        df = df[
-            (df['price'] < self.maxprice) &
-            (df['sqft'] != 0) &
-            (df['sqft'] < self.maxsqft)
+        self.df = df
+
+    def _makefeatures(self):
+        transforms = [
+            textstate.flesch_kincaid_grade
         ]
 
-        if self.zipcode:
-            df = df[df['zipcode'] == self.zipcode]
+        # apply transforms
+        transformsdf = self.df.transform(transforms)
 
-        self.df = df
-        return df
+        # join the results
+        self.df.join(transformsdf)
+
 
 
 if __name__ == '__main__':
