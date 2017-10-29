@@ -6,7 +6,6 @@
 build/
 logs/
 rerendered/
-scratch/
 
 # Pycharm files
 .idea
