@@ -2,8 +2,12 @@ from flask import Flask, render_template
 app = Flask(__name__)
 
 @app.route('/')
-def index():
+def flaskapp():
     return render_template('index.html')
 
-if __name__ '__main__':
+@app.route('/test')
+def testthis():
+    return 'This!'
+
+if __name__ == '__main__':
     app.run()
