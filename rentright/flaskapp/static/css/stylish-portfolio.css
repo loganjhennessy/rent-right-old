@@ -153,6 +153,16 @@ hr.small {
   }
 }
 
+.results {
+    padding-top: 40px;
+    padding-bottom: 20px;
+}
+
+.estimate-div {
+    margin-left: 0px;
+    margin-right: 0px;
+}
+
 
 /* How it Works*/
 .how-it-works {
