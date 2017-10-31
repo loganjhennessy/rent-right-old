@@ -9,10 +9,19 @@ from rentright.utils.mongo import get_mongoclient
 def gettrainingdata():
     mongoclient = get_mongoclient()
     units = mongoclient.scraper.unit.find()
-    df = pd.DataFrame(units)
+    units_list = list(units)
+    df = pd.DataFrame(units_list[:12000])
+    df.fillna(False, inplace=True)
     df = df[(df['price'] < 25000) & (df['sqft'] != 0) & (df['sqft'] < 10000)]
 
-    exclude_list = ['_id', 'description', 'listing_id', 'price', 'title']
+    exclude_list = [
+        '_id',
+        'description',
+        'listing_id',
+        'price',
+        'title',
+        'zipcode'
+    ]
     features = list(set(df.columns) - set(exclude_list))
     X = df[features]
     y = df['price']
@@ -20,13 +29,13 @@ def gettrainingdata():
 
 
 def trainmodel(X, y):
-    rfr = RandomForestRegressor(max_depth=100000, criterion='mae')
+    rfr = RandomForestRegressor(n_estimators=100, criterion='mae')
     rfr.fit(X, y)
     return rfr
 
 
 def savemodel(model):
-    with open('../data/rentrightmodel.pkl', 'wb') as f:
+    with open('../data/rentrightmodel-v1.pkl', 'wb') as f:
         pickle.dump(model, f)
 
 
