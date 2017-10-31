@@ -14,7 +14,9 @@ setup(
     install_requies=[
         'bs4',
         'fake_useragent',
+        'pandas',
         'pymongo',
+        'scikit-learn',
     ],
     url='https://github.com/loganjhennessy/rent-right'
 )
