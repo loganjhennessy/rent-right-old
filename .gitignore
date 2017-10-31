@@ -10,6 +10,7 @@ rerendered/
 .idea
 
 # Python generated files
+*.pkl
 __pycache__
 *.pyc
 
