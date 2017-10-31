@@ -24,26 +24,29 @@ class ContentScraper(object):
         zipcode: zip code for this scrape
     """
 
-    def __init__(self, zipcode, mongoclient):
-        """Init ContentScraper with zipcode and mongoclient.
+    def __init__(self):
+        """Init ContentScraper.
 
         proxy is set to value of HTTP_PROXY environment variable
         logger is retrieved from get_configured_logger function
         """
         self.logger = get_configured_logger('DEBUG', __name__)
-        self.mongoclient = mongoclient
+        self.mongoclient = None
         self.proxy = os.environ['HTTP_PROXY']
         self.sleeplong = 2
         self.sleepshort = 0.5
         self.ua = UserAgent()
-        self.zipcode = zipcode
+        self.zipcode = None
 
         self.logger.info(
             'ListingScraper initialized for zip code {}'.format(self.zipcode)
         )
 
-    def execute(self):
-        """Executes a content scrape for the requested zip code."""
+    def execute(self, zipcode, mongoclient):
+        """Executes a content scrape for the requested zip code and database."""
+        self.mongoclient = mongoclient
+        self.zipcode = zipcode
+
         listings = self._query_listings()
 
         self.logger.info(
@@ -61,6 +64,12 @@ class ContentScraper(object):
             self.logger.info('Listing {} of {} written to MongoDB.'.format(
                 i + 1, total_listings
             ))
+
+    def executeOne(self, link):
+        """Execute a content scrape for just one listing and return content."""
+        content = self._scrape_details(link)
+        return content
+
 
     def _postnotfound(self, content):
         """Returns whether or not the page has a .post-not-found-heading
@@ -143,7 +152,6 @@ class ContentScraper(object):
             listing: the original listing
         """
         scraper_db = self.mongoclient.scraper
-        query = {"_id": listing['_id']}
         listing_collection = scraper_db.listing
         listing_collection.update_one(
             {"_id": listing['_id']},
