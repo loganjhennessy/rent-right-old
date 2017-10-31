@@ -32,8 +32,8 @@ def run_both(city, zipcodes, mongoclient):
         zipcodesearch = ZipCodeSearch(city, zipcode, mongoclient)
         zipcodesearch.execute()
         logger.info('Compiled listings for zip code {}'.format(zipcode))
-        contentscraper = ContentScraper(zipcode, mongoclient)
-        contentscraper.execute()
+        contentscraper = ContentScraper()
+        contentscraper.execute(zipcode, mongoclient)
         logger.info('Gathered listings for zip code {}'.format(zipcode))
 
 def run_search(city, zipcodes, mongoclient):
@@ -61,8 +61,8 @@ def scrape_content(zipcodes, mongoclient):
     """
     logger = get_configured_logger('DEBUG', __name__)
     for zipcode in zipcodes:
-        contentscraper = ContentScraper(zipcode, mongoclient)
-        contentscraper.execute()
+        contentscraper = ContentScraper()
+        contentscraper.execute(zipcode, mongoclient)
         logger.info('Gathered listings for zip code {}'.format(zipcode))
 
 def main(argv):
