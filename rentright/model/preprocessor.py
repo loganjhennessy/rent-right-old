@@ -19,10 +19,10 @@ class Preprocessor(object):
         self.zipcode = zipcode
 
     def getfeatures(self):
-        self._applyfilters()
         self._makedataframe()
-        self._makefeatures()
-        excludelist = ['_id', 'description', 'listing_id', 'price', 'title']
+        self._applyfilters()
+        #self._makefeatures()
+        excludelist = ['_id', 'description', 'listing_id', 'price', 'title', 'zipcode']
         features = list(set(self.df.columns) - set(excludelist))
 
         X = self.df[features]

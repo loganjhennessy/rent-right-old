@@ -1,6 +1,6 @@
 import numpy as np
 
-from sklearn.model_selection import cross_val_score
+from sklearn.model_selection import cross_val_score, cross_validate
 
 
 class Evaluator(object):
@@ -14,16 +14,12 @@ class Evaluator(object):
         self.r2 = None
 
     def evaluate(self):
-        self.error = list(map(abs,
-            cross_val_score(
-                self.model,
-                self.X,
-                self.y,
-                cv=5,
-                scoring='neg_mean_absolute_error'
-            )
-        ))
-        self.r2 = list(cross_val_score(self.model, self.X, self.y, cv=5))
+        scores = cross_validate(
+                self.model, self.X, self.y,  cv=5, n_jobs=-1,
+                scoring=['neg_mean_absolute_error','r2'],
+                return_train_score=True)
+        self.error = abs(scores['test_neg_mean_absolute_error'])
+        self.r2 = scores['test_r2']
 
     def results(self):
         headers = ['Run', 'Error', 'R<sup>2</sup>']

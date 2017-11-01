@@ -1,4 +1,5 @@
 from sklearn.linear_model import LinearRegression
+from sklearn.ensemble import RandomForestRegressor
 
 from rentright.model.evaluator import Evaluator
 from rentright.model.preprocessor import Preprocessor
@@ -11,7 +12,7 @@ def main():
     X = preprocessor.getfeatures()
     y = preprocessor.getlabels()
 
-    model = LinearRegression()
+    model = RandomForestRegressor(n_estimators=10000, criterion='mae', n_jobs=-1)
     evaluator = Evaluator(model, X, y)
     evaluator.evaluate()
     print('Ran on {} units...'.format(X.shape[0]))
