@@ -1,18 +1,25 @@
-> **Note:** This application is a work-in-progress. Development began on
-> Monday, September 18th, 2017.
+Rent Right
+==========
 
-# Rent Right
+**What's in a listing?**
 
-What hidden features make a rental listing over or under the expected value?
+A price estimator for residential rental listings trained on ~25k listings in
+the Seattle rental market.
 
 # Motivation
 
-Through my own experience as a renter, I have found that I have developed
-somewhat of a 6th sense for the value of a property given the contents of it's
-advertisement. Things like image quality, text write-up, location, and various
-other features can indicate weather a property is over or under-priced. At
-present, this assessment is completely subjective and done in my head. This
-project is an attempt to codify that assessment.
+Through my own experience as a renter, I have developed somewhat of a 6th sense
+for the value of a property given the contents of it's advertisement. Things
+like image quality and text write-up can indicate weather a property is over or
+under-priced. At present, this assessment is completely subjective and done in
+my head. This project is an attempt to codify that assessment.
+
+# Current Status
+
+The first version of [Rent Right](rent-right.loganjhennessy.com) is currently 
+deployed.
+
+# Future Features
 
 # Setup
 
