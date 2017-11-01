@@ -119,7 +119,8 @@ class ContentScraper(object):
 
         while True:
             try:
-                resp = requests.get(url, headers=headers, proxies=proxies)
+                #resp = requests.get(url, headers=headers, proxies=proxies)
+                resp = requests.get(url, headers=headers)
                 if self._postnotfound(resp.content):
                     self.logger.info('Page not found.')
                     break
