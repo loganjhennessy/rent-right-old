@@ -10,7 +10,7 @@ def gettrainingdata():
     mongoclient = get_mongoclient()
     units = mongoclient.scraper.unit.find()
     units_list = list(units)
-    df = pd.DataFrame(units_list[:12000])
+    df = pd.DataFrame(units_list)
     df.fillna(False, inplace=True)
     df = df[(df['price'] < 25000) & (df['sqft'] != 0) & (df['sqft'] < 10000)]
 
@@ -29,14 +29,14 @@ def gettrainingdata():
 
 
 def trainmodel(X, y):
-    rfr = RandomForestRegressor(n_estimators=100, criterion='mae')
+    rfr = RandomForestRegressor(n_estimators=10000, criterion='mae', n_jobs=-1)
     rfr.fit(X, y)
     return rfr
 
 
 def savemodel(model):
     with open('/home/ubuntu/rent-right/rentright/data/rentrightmodel-v1.pkl', 'wb') as f:
-        pickle.dump(model, f)
+        pickle.dump(model, f, protocol=-1)
 
 
 def main():
