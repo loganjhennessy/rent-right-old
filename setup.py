@@ -1,4 +1,5 @@
-from distutils.core import setup
+#from distutils.core import setup
+from setuptools import setup
 
 setup(
     name='rentright', version='1.0', author='lhennessy',
@@ -11,7 +12,7 @@ setup(
         'rentright.scrub', 
         'rentright.utils',
     ],
-    install_requies=[
+    install_requires=[
         'bs4',
         'fake_useragent',
         'pandas',
