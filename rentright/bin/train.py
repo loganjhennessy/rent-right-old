@@ -35,7 +35,7 @@ def trainmodel(X, y):
 
 
 def savemodel(model):
-    with open('../data/rentrightmodel-v1.pkl', 'wb') as f:
+    with open('/home/ubuntu/rent-right/rentright/data/rentrightmodel-v1.pkl', 'wb') as f:
         pickle.dump(model, f)
 
 
