@@ -8,8 +8,8 @@ class Preprocessor(object):
     """Preprocesses data for training the rentright model."""
     def __init__(self,
                  mongoclient,
-                 maxprice=25000,
-                 maxsqft=10000,
+                 maxprice=15000,
+                 maxsqft=7500,
                  zipcode=None):
         self.df = None # set by process() method
         self.mongoclient = mongoclient
@@ -35,6 +35,7 @@ class Preprocessor(object):
     def _applyfilters(self):
         self.df = self.df[
             (self.df['price'] < self.maxprice) &
+            (self.df['price'] > 0) &
             (self.df['sqft'] != 0) &
             (self.df['sqft'] < self.maxsqft)
         ]

@@ -15,9 +15,9 @@ class Evaluator(object):
 
     def evaluate(self):
         scores = cross_validate(
-                self.model, self.X, self.y,  cv=5, n_jobs=-1,
+                self.model, self.X, self.y,  cv=5, n_jobs=36,
                 scoring=['neg_mean_absolute_error','r2'],
-                return_train_score=True)
+                return_train_score=True, verbose=2)
         self.error = abs(scores['test_neg_mean_absolute_error'])
         self.r2 = scores['test_r2']
 

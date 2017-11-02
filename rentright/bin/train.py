@@ -12,7 +12,7 @@ def gettrainingdata():
     units_list = list(units)
     df = pd.DataFrame(units_list)
     df.fillna(False, inplace=True)
-    df = df[(df['price'] < 25000) & (df['sqft'] != 0) & (df['sqft'] < 10000)]
+    df = df[(df['price'] < 15000) & (df['price'] > 0) & (df['sqft'] != 0) & (df['sqft'] < 7500)]
 
     exclude_list = [
         '_id',
@@ -29,7 +29,7 @@ def gettrainingdata():
 
 
 def trainmodel(X, y):
-    rfr = RandomForestRegressor(n_estimators=10000, criterion='mae', n_jobs=-1)
+    rfr = RandomForestRegressor(n_estimators=1000, criterion='mae', n_jobs=36, verbose=2)
     rfr.fit(X, y)
     return rfr
 
