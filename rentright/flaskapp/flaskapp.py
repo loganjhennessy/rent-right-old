@@ -7,17 +7,21 @@ from rentright.scrub.listing import Listing
 from flask import Flask, render_template, request, json
 from sklearn.ensemble import RandomForestRegressor
 
+application = Flask(
+    __name__, 
+    template_folder='/home/ubuntu/rent-right/rentright/flaskapp/templates'
+)
 
-app = Flask(__name__)
-
-@app.route('/', methods = ['POST', 'GET'])
+@application.route('/', methods = ['POST', 'GET'])
 def flaskapp():
     if request.method == 'POST':
         pass
 
-    return render_template('index.html')
+    return render_template(
+            'index.html'
+    )
 
-@app.route('/estimate', methods = ['POST'])
+@application.route('/estimate', methods = ['POST'])
 def estimate():
     link = request.form['link']
 
@@ -68,19 +72,19 @@ def estimate():
 
     # Feed all the attributes into the model to make one estimate
     #   Set estimate = 'estimate'
-    rentrightmodel = pickle.load(open('/home/ubuntu/rent-right/rentright/data/rentrightmodel-v1.pkl', 'rb'))
+    with open('/home/ubuntu/rent-right/rentright/flaskapp/data/rentrightmodel-v0.pkl', 'rb') as f:
+        rentrightmodel = pickle.load(f, encoding='bytes')
     estimated_price = rentrightmodel.predict(X)
 
     print('estimated_price: %s' % estimated_price)
 
-    model_pkl.close()
-
     # Return the estimate and actual price, which gets set on the client side
     return json.dumps({
         'status': 'OK',
-        'estimate': estimated_price,
-        'actual': actual_price
+        'estimate': '$ ' + str(estimated_price[0]),
+        'actual': '$ ' + str(actual_price)
     })
 
 if __name__ == '__main__':
-    app.run()
+    application.run()
+
