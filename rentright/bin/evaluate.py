@@ -12,7 +12,7 @@ def main():
     X = preprocessor.getfeatures()
     y = preprocessor.getlabels()
 
-    model = RandomForestRegressor(n_estimators=10000, criterion='mae', n_jobs=-1)
+    model = RandomForestRegressor(n_estimators=1000, criterion='mae', n_jobs=36, verbose=2)
     evaluator = Evaluator(model, X, y)
     evaluator.evaluate()
     print('Ran on {} units...'.format(X.shape[0]))
