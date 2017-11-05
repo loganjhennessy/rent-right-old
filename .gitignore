@@ -1,10 +1,12 @@
-# Jupyter notebook
-.ipynb_checkpoints
-
 # Exclude local directories
+*.egg-info/
 build/
+dist/
 logs/
 rerendered/
+
+# Jupyter notebook
+.ipynb_checkpoints
 
 # Pycharm files
 .idea
