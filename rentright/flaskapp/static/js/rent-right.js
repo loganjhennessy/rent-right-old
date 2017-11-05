@@ -89,6 +89,11 @@
     });
   });
 
+  var price = new Intl.NumberFormat('en-US', 
+                { style: 'currency', currency: 'USD',
+                  minimumFractionDigits: 2 }
+              );
+
   $('#linkForm').submit(function(e) {
     e.preventDefault();
     var estimate = $('#txtEstimate').val();
@@ -99,8 +104,8 @@
       success: function(response) {
         console.log(response.estimate);
         console.log(response.actual);
-        $("#estimateTxt").text(response.estimate);
-        $("#actualTxt").text(response.actual);
+        $("#estimateTxt").text(parseInt(price.format(response.estimate)));
+        $("#actualTxt").text(price.format(response.actual));
       },
       error: function(error) {
         console.log(error);
