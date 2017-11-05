@@ -7,6 +7,7 @@ setup(
     packages=[
         'rentright',
         'rentright.bin',
+        'rentright.flaskapp',
         'rentright.model',
         'rentright.scrape',
         'rentright.scrub', 
