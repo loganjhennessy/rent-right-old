@@ -72,7 +72,7 @@ def estimate():
 
     # Feed all the attributes into the model to make one estimate
     #   Set estimate = 'estimate'
-    with open('/home/ubuntu/rent-right/rentright/flaskapp/data/rentrightmodel-v0.pkl', 'rb') as f:
+    with open('/home/ubuntu/rent-right/rentright/flaskapp/data/rent-right-model-v2.pkl', 'rb') as f:
         rentrightmodel = pickle.load(f, encoding='bytes')
     estimated_price = rentrightmodel.predict(X)
 
