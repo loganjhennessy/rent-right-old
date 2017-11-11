@@ -78,6 +78,7 @@
   $('button').click(function(e) {
     e.preventDefault();
     var estimate = $('#txtEstimate').val();
+    $('.submit').addClass("loading");
     $.ajax({
       url: '/estimate',
       data: $('form').serialize(),
@@ -85,6 +86,7 @@
       success: function(response) {
         console.log(response.estimate);
         console.log(response.actual);
+        $('.submit').removeClass("loading");
         $("#estimateTxt").text(price.format(parseFloat(response.estimate)));
         $("#actualTxt").text(price.format(parseFloat(response.actual)));
       },
@@ -98,6 +100,7 @@
   $('#linkForm').submit(function(e) {
     e.preventDefault();
     var estimate = $('#txtEstimate').val();
+    $('.submit').addClass("loading");
     $.ajax({
       url: '/estimate',
       data: $('form').serialize(),
@@ -105,6 +108,7 @@
       success: function(response) {
         console.log(response.estimate);
         console.log(response.actual);
+        $('.submit').removeClass("loading");
         $("#estimateTxt").text(price.format(parseFloat(response.estimate)));
         $("#actualTxt").text(price.format(parseFloat(response.actual)));
       },

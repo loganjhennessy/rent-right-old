@@ -240,3 +240,64 @@ footer {
   display: none;
   padding: 15px 20px;
 }
+
+/* Loading button */
+
+.ajax-button{
+  position:relative;
+  display:inline-block;
+  width:100px;
+  height:40px;
+  left:50%;
+  top:50%;
+  margin-left:-50px;
+  margin-top:-20px;
+  text-align:center;
+}
+.submit{
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  width:100px;
+  height:40px;
+  background-color:#111111;
+  border:2px solid #FFFFFF;
+  border-radius:10px;
+  color:#FFFFFF;
+  font-size:17px;
+  cursor:pointer !important;
+  outline:none;
+}
+
+.submit:hover{
+  background-color:#222222;
+}
+.loading{
+  font-size:0;
+  width:30px;
+  height:30px;
+  margin-top:5px;
+  border-radius:15px;
+  padding:0;
+  border:3px solid #000000;
+  border-bottom:3px solid rgba(255,255,255,0.0);
+  border-left:3px solid rgba(255,255,255,0.0);
+  background-color:transparent !important;
+  animation-name: rotateAnimation;
+  -webkit-animation-name: wk-rotateAnimation;
+  animation-duration: 1s;
+  -webkit-animation-duration: 1s;
+  animation-delay: 0.2s;
+  -webkit-animation-delay: 0.2s;
+  animation-iteration-count: infinite;
+  -webkit-animation-iteration-count: infinite;
+}
+
+@keyframes rotateAnimation {
+    0%   {transform: rotate(0deg);}
+    100% {transform: rotate(360deg);}
+}
+@-webkit-keyframes wk-rotateAnimation {
+    0%   {-webkit-transform: rotate(0deg);}
+    100% {-webkit-transform: rotate(360deg);}
+}
