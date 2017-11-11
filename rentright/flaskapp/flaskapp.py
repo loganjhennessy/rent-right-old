@@ -11,6 +11,7 @@ application = Flask(
     template_folder='/home/ubuntu/rent-right/rentright/flaskapp/templates'
 )
 
+
 @application.route('/', methods = ['POST', 'GET'])
 def flaskapp():
     if request.method == 'POST':
@@ -19,6 +20,7 @@ def flaskapp():
     return render_template(
             'index.html'
     )
+
 
 @application.route('/estimate', methods = ['POST'])
 def estimate():
@@ -59,6 +61,7 @@ def estimate():
         'estimate': str(estimated_price[0]),
         'actual': str(actual_price)
     })
+
 
 if __name__ == '__main__':
     with open('/home/ubuntu/rent-right/rentright/flaskapp/data/rent-right-model-v2.pkl', 'rb') as f:
