@@ -37,21 +37,22 @@ def estimate():
 
     print('actual_price: %s' % actual_price)
 
-    attr_set = {'house', 'attached garage', 'duplex', 'cottage/cabin',
-                'cats are OK - purrr', 'flat', 'street parking',
-                'laundry on site', 'apartment', 'dogs are OK - wooof',
-                'furnished', 'laundry in bldg', 'in-law', 'w/d in unit',
-                'no smoking', 'townhouse', 'w/d hookups', 'no laundry on site',
-                'manufactured', 'assisted living', 'condo',
-                'carport', 'valet parking', 'land', 'wheelchair accessible',
-                'no parking', 'off-street parking', 'detached garage'}
+    # attr_set = {'house', 'attached garage', 'duplex', 'cottage/cabin',
+    #             'cats are OK - purrr', 'flat', 'street parking',
+    #             'laundry on site', 'apartment', 'dogs are OK - wooof',
+    #             'furnished', 'laundry in bldg', 'in-law', 'w/d in unit',
+    #             'no smoking', 'townhouse', 'w/d hookups', 'no laundry on site',
+    #             'manufactured', 'assisted living', 'condo',
+    #             'carport', 'valet parking', 'land', 'wheelchair accessible',
+    #             'no parking', 'off-street parking', 'detached garage'}
+    #
+    # feature_set = {'w/d in unit', 'price', 'sqft', 'cats are OK - purrr',
+    #                'latitude', 'detached garage', 'longitude', 'num_images',
+    #                'bedrooms', 'apartment', 'dogs are OK - wooof',
+    #                'no smoking', 'bathrooms'} | attr_set
 
-    feature_set = {'w/d in unit', 'price', 'sqft', 'cats are OK - purrr',
-                   'latitude', 'detached garage', 'longitude', 'num_images',
-                   'bedrooms', 'apartment', 'dogs are OK - wooof',
-                   'no smoking', 'bathrooms'} | attr_set
 
-    print('Set the sets')
+    feature_set = {'bedrooms', 'bathrooms', 'sqft', 'latitude', 'longitude', 'pets'}
 
     unit_features = {
         key: val for key, val in unit.data.items() if key in feature_set
@@ -61,21 +62,14 @@ def estimate():
     df = pd.concat([unit_df, empty_df])
     df.fillna(False, inplace=True)
 
-    print('Build the df')
-
-    features = list(
-        set(df.columns) - {'_id', 'description', 'listing_id', 'price', 'title'}
-    )
+    # features = list(
+    #     set(df.columns) - {'_id', 'description', 'listing_id', 'price', 'title'}
+    # )
     df['pets'] = df['cats are OK - purrr'] | df['dogs are OK - wooof']
     features = ['bedrooms', 'bathrooms', 'sqft', 'latitude', 'longitude', 'pets']
     X = df[features]
 
-    print('Got some features')
-
     # Feed all the attributes into the model to make one estimate
-    #   Set estimate = 'estimate'
-    with open('/home/ubuntu/rent-right/rentright/flaskapp/data/rent-right-model-v2.pkl', 'rb') as f:
-        rentrightmodel = pickle.load(f, encoding='bytes')
     estimated_price = rentrightmodel.predict(X)
 
     print('estimated_price: %s' % estimated_price[0])
@@ -88,5 +82,7 @@ def estimate():
     })
 
 if __name__ == '__main__':
+    with open('/home/ubuntu/rent-right/rentright/flaskapp/data/rent-right-model-v2.pkl', 'rb') as f:
+        rentrightmodel = pickle.load(f, encoding='bytes')
     application.run()
 
