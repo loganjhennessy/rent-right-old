@@ -66,6 +66,8 @@ def estimate():
     features = list(
         set(df.columns) - {'_id', 'description', 'listing_id', 'price', 'title'}
     )
+    df['pets'] = df['cats are OK - purrr'] | df['dogs are OK - wooof']
+    features = ['bedrooms', 'bathrooms', 'sqft', 'latitude', 'longitude', 'pets']
     X = df[features]
 
     print('Got some features')
@@ -76,13 +78,13 @@ def estimate():
         rentrightmodel = pickle.load(f, encoding='bytes')
     estimated_price = rentrightmodel.predict(X)
 
-    print('estimated_price: %s' % estimated_price)
+    print('estimated_price: %s' % estimated_price[0])
 
     # Return the estimate and actual price, which gets set on the client side
     return json.dumps({
         'status': 'OK',
-        'estimate': '$ ' + str(estimated_price[0]),
-        'actual': '$ ' + str(actual_price)
+        'estimate': str(estimated_price[0]),
+        'actual': str(actual_price)
     })
 
 if __name__ == '__main__':
