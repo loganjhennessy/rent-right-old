@@ -5,7 +5,6 @@ from rentright.scrape.contentscraper import ContentScraper
 from rentright.scrub.listing import Listing
 
 from flask import Flask, render_template, request, json
-from sklearn.ensemble import RandomForestRegressor
 
 application = Flask(
     __name__, 
@@ -30,27 +29,9 @@ def estimate():
     content = contentscraper.executeOne(link)
 
     # Parse the listing to get all the attributes
-    #   Set actual = 'price'
     listing = Listing(content, listing_id=None, zipcode=None)
     unit = listing.clean()
     actual_price = unit['price']
-
-    print('actual_price: %s' % actual_price)
-
-    # attr_set = {'house', 'attached garage', 'duplex', 'cottage/cabin',
-    #             'cats are OK - purrr', 'flat', 'street parking',
-    #             'laundry on site', 'apartment', 'dogs are OK - wooof',
-    #             'furnished', 'laundry in bldg', 'in-law', 'w/d in unit',
-    #             'no smoking', 'townhouse', 'w/d hookups', 'no laundry on site',
-    #             'manufactured', 'assisted living', 'condo',
-    #             'carport', 'valet parking', 'land', 'wheelchair accessible',
-    #             'no parking', 'off-street parking', 'detached garage'}
-    #
-    # feature_set = {'w/d in unit', 'price', 'sqft', 'cats are OK - purrr',
-    #                'latitude', 'detached garage', 'longitude', 'num_images',
-    #                'bedrooms', 'apartment', 'dogs are OK - wooof',
-    #                'no smoking', 'bathrooms'} | attr_set
-
 
     feature_set = {'bedrooms', 'bathrooms', 'sqft', 'latitude', 'longitude', 'pets'}
 
@@ -62,16 +43,14 @@ def estimate():
     df = pd.concat([unit_df, empty_df])
     df.fillna(False, inplace=True)
 
-    # features = list(
-    #     set(df.columns) - {'_id', 'description', 'listing_id', 'price', 'title'}
-    # )
     df['pets'] = df['cats are OK - purrr'] | df['dogs are OK - wooof']
-    features = ['bedrooms', 'bathrooms', 'sqft', 'latitude', 'longitude', 'pets']
+    features = list(feature_set)
     X = df[features]
 
     # Feed all the attributes into the model to make one estimate
     estimated_price = rentrightmodel.predict(X)
 
+    print('actual_price: %s' % actual_price)
     print('estimated_price: %s' % estimated_price[0])
 
     # Return the estimate and actual price, which gets set on the client side
