@@ -70,7 +70,13 @@
     }
   });
 
+  var price = new Intl.NumberFormat('en-US', 
+                { style: 'currency', currency: 'USD',
+                  minimumFractionDigits: 2 }
+              );
+
   $('button').click(function(e) {
+    e.preventDefault();
     var estimate = $('#txtEstimate').val();
     $.ajax({
       url: '/estimate',
@@ -79,8 +85,8 @@
       success: function(response) {
         console.log(response.estimate);
         console.log(response.actual);
-        $("#estimateTxt").text(response.estimate);
-        $("#actualTxt").text(response.actual);
+        $("#estimateTxt").text(price.format(parseFloat(response.estimate)));
+        $("#actualTxt").text(price.format(parseFloat(response.actual)));
       },
       error: function(error) {
         console.log(error);
@@ -88,11 +94,6 @@
       dataType: 'json'
     });
   });
-
-  var price = new Intl.NumberFormat('en-US', 
-                { style: 'currency', currency: 'USD',
-                  minimumFractionDigits: 2 }
-              );
 
   $('#linkForm').submit(function(e) {
     e.preventDefault();
@@ -104,8 +105,8 @@
       success: function(response) {
         console.log(response.estimate);
         console.log(response.actual);
-        $("#estimateTxt").text(parseInt(price.format(response.estimate)));
-        $("#actualTxt").text(price.format(response.actual));
+        $("#estimateTxt").text(price.format(parseFloat(response.estimate)));
+        $("#actualTxt").text(price.format(parseFloat(response.actual)));
       },
       error: function(error) {
         console.log(error);
